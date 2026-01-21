@@ -11,38 +11,37 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: {
-    default: "WebClinic Solutions — Разработка веб-систем и автоматизация бизнеса",
-    template: "%s | WebClinic Solutions",
+    default: "WebClinic — Разработка веб-систем и автоматизация",
+    template: "%s | WebClinic",
   },
   description:
-    "Разрабатываем надёжные веб-системы, CRM/ERP решения и автоматизируем бизнес-процессы. Полный цикл разработки под ключ для малого и среднего бизнеса.",
-  authors: [{ name: "WebClinic Solutions" }],
-  creator: "WebClinic Solutions",
-  publisher: "WebClinic Solutions",
+    "Инженерная команда для разработки веб-приложений, CRM/ERP систем и enterprise-решений. Проектирование архитектуры, разработка, поддержка.",
+  authors: [{ name: "WebClinic" }],
+  creator: "WebClinic",
+  publisher: "WebClinic",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://WebClinic-solutions.dev"),
+  metadataBase: new URL("https://webclinic.dev"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: "https://WebClinic-solutions.dev",
-    title: "WebClinic Solutions — Разработка веб-систем и автоматизация бизнеса",
+    url: "https://webclinic.dev",
+    title: "WebClinic — Разработка веб-систем и автоматизация",
     description:
-      "Разрабатываем надёжные веб-системы, CRM/ERP решения и автоматизируем бизнес-процессы. Полный цикл разработки под ключ.",
-    siteName: "WebClinic Solutions",
+      "Инженерная команда для разработки веб-приложений, CRM/ERP систем и enterprise-решений.",
+    siteName: "WebClinic",
   },
   twitter: {
     card: "summary_large_image",
-    title: "WebClinic Solutions — Разработка веб-систем",
+    title: "WebClinic — Разработка веб-систем",
     description:
-      "Разрабатываем надёжные веб-системы, CRM/ERP решения и автоматизируем бизнес-процессы.",
-    creator: "@WebClinicsolutions",
+      "Инженерная команда для разработки веб-приложений, CRM/ERP систем и enterprise-решений.",
   },
   robots: {
     index: true,

@@ -1,16 +1,20 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation, EffectCoverflow } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-import "swiper/css/effect-coverflow";
+import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
 
 export default function HomeTestimonialsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,222 +35,250 @@ export default function HomeTestimonialsSection() {
     return () => observer.disconnect();
   }, []);
 
+  // Auto-rotate testimonials
+  useEffect(() => {
+    if (!isVisible) return;
+    const interval = setInterval(() => {
+      setActiveTestimonial(prev => (prev + 1) % testimonials.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isVisible]);
+
   const testimonials = [
     {
       id: 1,
-      name: "Алексей Петров",
-      role: "CEO, TechStart",
-      company: "IT-стартап",
-      avatar: "АП",
-      rating: 5,
-      text: "Команда WebClinic разработала для нас CRM-систему, которая полностью изменила наш подход к работе с клиентами. Сроки соблюдены, качество на высоте. Рекомендую!",
-      project: "CRM-система",
+      name: "Алексей Морозов",
+      role: "CTO",
+      company: "LogiTrack",
+      industry: "Логистика",
+      avatar: "",
+      text: "Разрабатывали CRM для управления грузоперевозками. Особенно ценю, что команда не просто писала код по ТЗ, а предлагала архитектурные решения, которые упростили масштабирование. Сейчас система обрабатывает 500+ заказов в день.",
+      result: "Автоматизировали 80% рутинных операций",
+      color: "#00ff88",
     },
     {
       id: 2,
-      name: "Мария Иванова",
-      role: "Директор по маркетингу",
-      company: "E-commerce",
-      avatar: "МИ",
-      rating: 5,
-      text: "Заказывали разработку интернет-магазина. Ребята не просто сделали сайт — они погрузились в наш бизнес и предложили решения, о которых мы даже не думали. Конверсия выросла на 40%.",
-      project: "Интернет-магазин",
+      name: "Екатерина Волкова",
+      role: "Product Manager",
+      company: "HealthTech Solutions",
+      industry: "MedTech",
+      avatar: "",
+      text: "Проект с высокими требованиями к безопасности — медицинские данные. WebClinic прошли все аудиты безопасности с первого раза. Отдельно отмечу качество документации — новые разработчики легко включаются в проект.",
+      result: "Прошли сертификацию ISO 27001",
+      color: "#00d4ff",
     },
     {
       id: 3,
       name: "Дмитрий Козлов",
-      role: "Основатель",
-      company: "Логистика",
-      avatar: "ДК",
-      rating: 5,
-      text: "Автоматизировали складской учёт и интегрировали с 1С. Теперь вместо трёх менеджеров эту работу делает система. Окупилось за 4 месяца.",
-      project: "Автоматизация склада",
-    },
-    {
-      id: 4,
-      name: "Елена Смирнова",
-      role: "Product Owner",
-      company: "FinTech",
-      avatar: "ЕС",
-      rating: 5,
-      text: "Разрабатывали сложную платформу для финансовых расчётов. Команда показала глубокое понимание предметной области и внимание к безопасности. Работаем вместе уже 2 года.",
-      project: "Финансовая платформа",
-    },
-    {
-      id: 5,
-      name: "Андрей Волков",
-      role: "Технический директор",
-      company: "SaaS-сервис",
-      avatar: "АВ",
-      rating: 5,
-      text: "Нужен был рефакторинг legacy-кода и миграция на современный стек. WebClinic справились отлично — система стала работать в 3 раза быстрее.",
-      project: "Рефакторинг системы",
+      role: "Founder",
+      company: "RetailPro",
+      industry: "E-commerce",
+      avatar: "",
+      text: "Переезжали с самописного legacy-решения на современный стек. Больше всего впечатлила методология: сначала детальный аудит, план миграции по этапам, и только потом код. Ни дня простоя за 4 месяца перехода.",
+      result: "Время загрузки снизилось в 3 раза",
+      color: "#8b5cf6",
     },
   ];
 
-  return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-[#0a0e17] relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 grid-pattern-animated opacity-30" />
-      <div className="orb orb-purple w-80 h-80 top-1/4 -left-40 animate-float" />
-      <div className="orb orb-cyan w-96 h-96 bottom-0 -right-48 animate-float-delayed" />
+  const clients = [
+    { name: "LogiTrack", logo: "" },
+    { name: "HealthTech", logo: "" },
+    { name: "RetailPro", logo: "" },
+    { name: "FinanceHub", logo: "" },
+    { name: "DataStream", logo: "" },
+    { name: "CloudBase", logo: "" },
+  ];
 
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
+  return (
+    <section ref={sectionRef} className="py-24 lg:py-32 bg-[#0f1520] relative overflow-hidden">
+      {/* Grid pattern */}
+      <div className="absolute inset-0 grid-pattern opacity-20" />
+      
+      {/* Gradient lines */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#00d4ff]/30 to-transparent" />
+      
+      <motion.div style={{ y }} className="orb orb-purple w-80 h-80 top-1/4 -left-40 opacity-20" />
+      <div className="orb orb-cyan w-96 h-96 bottom-0 -right-48 opacity-15" />
+
+      <div ref={containerRef} className="max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16 lg:mb-20"
+          className="text-center mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-2 rounded-full bg-[#00d4ff]/10 text-[#00d4ff] text-sm font-medium mb-6"
-          >
-            Отзывы клиентов
-          </motion.span>
+          <span className="inline-block px-4 py-2 rounded-full bg-[#00d4ff]/10 text-[#00d4ff] text-sm font-medium mb-6">
+            Отзывы
+          </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.1] mb-6">
-            Что говорят о нас <span className="text-[#00ff88] text-glow-green">клиенты</span>
+            Мнения технических<br/>
+            <span className="gradient-text">руководителей</span>
           </h2>
-          <p className="text-lg lg:text-xl text-white/60 font-light leading-relaxed max-w-3xl mx-auto">
-            Реальные отзывы компаний, с которыми мы работали. 
-            Каждый проект — это история успеха.
+          <p className="text-lg text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
+            Работаем преимущественно с техническими командами, 
+            которые понимают разницу между «сделать» и «сделать правильно».
           </p>
         </motion.div>
 
-        {/* Testimonials Slider */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Swiper
-            modules={[Autoplay, Pagination, Navigation, EffectCoverflow]}
-            effect="coverflow"
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView={1}
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 0,
-              depth: 100,
-              modifier: 2,
-              slideShadows: false,
-            }}
-            breakpoints={{
-              640: {
-                slidesPerView: 1.5,
-              },
-              1024: {
-                slidesPerView: 2.5,
-              },
-            }}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
-            navigation={true}
-            className="testimonials-swiper !pb-16"
+        {/* Main testimonial showcase */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 mb-20">
+          {/* Testimonial content */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={isVisible ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="order-2 lg:order-1"
           >
-            {testimonials.map((testimonial) => (
-              <SwiperSlide key={testimonial.id}>
-                <div className="p-8 lg:p-10 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-500 mx-2 my-4 group card-hover">
-                  {/* Quote icon */}
-                  <div className="mb-6">
-                    <svg
-                      className="w-10 h-10 text-[#00ff88]/30 group-hover:text-[#00ff88]/50 transition-colors duration-300"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
-                  </div>
-
-                  {/* Rating */}
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className="w-5 h-5 text-[#00ff88]"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-
-                  {/* Text */}
-                  <p className="text-white/80 leading-relaxed mb-6 text-lg">
-                    &ldquo;{testimonial.text}&rdquo;
+            <div className="relative min-h-[420px] lg:min-h-[380px]">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={testimonial.id}
+                initial={false}
+                animate={{
+                  opacity: activeTestimonial === index ? 1 : 0,
+                  y: activeTestimonial === index ? 0 : 20,
+                }}
+                transition={{ duration: 0.5 }}
+                className={`${activeTestimonial === index ? "relative" : "absolute inset-0 pointer-events-none"}`}
+              >
+                {/* Quote */}
+                <div className="mb-8">
+                  <svg
+                    className="w-12 h-12 mb-6"
+                    style={{ color: `${testimonial.color}40` }}
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                  </svg>
+                  <p className="text-xl lg:text-2xl text-white/90 leading-relaxed mb-6 line-clamp-4">
+                    {testimonial.text}
                   </p>
+                </div>
 
-                  {/* Project tag */}
-                  <div className="inline-block px-3 py-1 rounded-full bg-[#00ff88]/10 text-[#00ff88] text-sm mb-6">
-                    {testimonial.project}
+                {/* Result badge */}
+                <div 
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg mb-8"
+                  style={{ backgroundColor: `${testimonial.color}15` }}
+                >
+                  <svg className="w-4 h-4" style={{ color: testimonial.color }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  <span className="text-sm" style={{ color: testimonial.color }}>
+                    {testimonial.result}
+                  </span>
+                </div>
+
+                {/* Author */}
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full overflow-hidden bg-[#1f2937]">
+                    {testimonial.avatar ? (
+                      <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div 
+                        className="w-full h-full flex items-center justify-center text-lg font-bold"
+                        style={{ backgroundColor: `${testimonial.color}20`, color: testimonial.color }}
+                      >
+                        {testimonial.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                    )}
                   </div>
-
-                  {/* Author */}
-                  <div className="flex items-center gap-4 pt-6 border-t border-[#1f2937]">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00ff88] to-[#00d4ff] flex items-center justify-center text-[#0a0e17] font-bold">
-                      {testimonial.avatar}
+                  <div>
+                    <div className="font-semibold text-white text-lg">
+                      {testimonial.name}
                     </div>
-                    <div>
-                      <div className="font-semibold text-white">
-                        {testimonial.name}
-                      </div>
-                      <div className="text-sm text-white/50">
-                        {testimonial.role} • {testimonial.company}
-                      </div>
+                    <div className="text-white/50">
+                      {testimonial.role}, {testimonial.company}
+                    </div>
+                    <div className="text-xs text-white/30 mt-1">
+                      {testimonial.industry}
                     </div>
                   </div>
                 </div>
-              </SwiperSlide>
+              </motion.div>
             ))}
-          </Swiper>
-        </motion.div>
+            </div>
 
-        {/* Stats */}
+            {/* Navigation dots */}
+            <div className="flex gap-3 mt-8">
+              {testimonials.map((testimonial, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTestimonial(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    activeTestimonial === index ? "w-8" : "w-2"
+                  }`}
+                  style={{
+                    backgroundColor: activeTestimonial === index 
+                      ? testimonial.color 
+                      : "#1f2937"
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Image placeholder */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={isVisible ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="order-1 lg:order-2"
+          >
+            <div className="relative">
+              <ImagePlaceholder 
+                src=""
+                alt="Работа с клиентами"
+                aspectRatio="square"
+                overlayColor={testimonials[activeTestimonial].color}
+              />
+              
+              {/* Floating card */}
+              <motion.div
+                style={{ y }}
+                className="absolute -bottom-6 -right-6 p-6 rounded-2xl bg-[#0a0e17]/90 backdrop-blur-xl border border-[#1f2937] max-w-[200px]"
+              >
+                <div className="text-3xl font-bold text-white mb-1">
+                  50<span className="text-[#00ff88]">+</span>
+                </div>
+                <div className="text-sm text-white/60">
+                  завершённых проектов
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Client logos */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="pt-12 border-t border-[#1f2937]"
         >
-          {[
-            { value: "98%", label: "Довольных клиентов" },
-            { value: "50+", label: "Завершённых проектов" },
-            { value: "4.9", label: "Средняя оценка" },
-            { value: "85%", label: "Возвращаются повторно" },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-              className="text-center p-6 rounded-xl bg-[#0f1520]/50 border border-[#1f2937] hover:border-[#00ff88]/20 transition-all duration-300"
-            >
-              <div className="text-3xl lg:text-4xl font-bold text-white mb-1">
-                {stat.value.includes("%") || stat.value.includes("+") ? (
-                  <>
-                    {stat.value.replace(/[%+]/g, "")}
-                    <span className="text-[#00ff88]">
-                      {stat.value.includes("%") ? "%" : "+"}
-                    </span>
-                  </>
+          <p className="text-center text-white/40 text-sm mb-8">
+            Нам доверяют технологические компании
+          </p>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center">
+            {clients.map((client, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={isVisible ? { opacity: 1 } : {}}
+                transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
+                className="flex items-center justify-center h-12 px-4 rounded-lg bg-[#0a0e17]/50 border border-[#1f2937] hover:border-[#00ff88]/30 transition-all group"
+              >
+                {client.logo ? (
+                  <img src={client.logo} alt={client.name} className="h-6 opacity-50 group-hover:opacity-100 transition-opacity" />
                 ) : (
-                  <span className="gradient-text">{stat.value}</span>
+                  <span className="text-white/30 group-hover:text-white/60 font-medium text-sm transition-colors">
+                    {client.name}
+                  </span>
                 )}
-              </div>
-              <div className="text-white/50 text-sm">{stat.label}</div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

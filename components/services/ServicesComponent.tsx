@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -8,19 +8,17 @@ interface Service {
   icon: React.ReactNode;
   title: string;
   shortDesc: string;
-  problem: string;
-  solution: string;
-  result: string;
   features: string[];
-  technologies: string[];
   price: string;
   timeline: string;
+  gradient: string;
+  color: string;
 }
 
 export default function ServicesComponent() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [hoveredService, setHoveredService] = useState<string | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,21 +48,17 @@ export default function ServicesComponent() {
         </svg>
       ),
       title: "Веб-разработка",
-      shortDesc: "Корпоративные сайты, веб-приложения и платформы",
-      problem: "Устаревший сайт не приносит клиентов, медленно загружается и плохо выглядит на мобильных устройствах.",
-      solution: "Создаём современные, быстрые сайты с адаптивным дизайном и оптимизацией для поисковых систем.",
-      result: "Увеличение конверсии, профессиональный имидж компании, рост органического трафика.",
+      shortDesc: "Корпоративные сайты, веб-приложения и платформы с современным дизайном и высокой производительностью.",
       features: [
         "Корпоративные сайты",
         "Лендинги и промо-страницы",
         "Интернет-магазины",
-        "Веб-порталы",
         "SPA/PWA приложения",
-        "Редизайн и миграция",
       ],
-      technologies: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
       price: "от 150 000 ₽",
       timeline: "4-8 недель",
+      gradient: "from-[#00ff88] to-[#00d4ff]",
+      color: "#00ff88",
     },
     {
       id: "crm-erp",
@@ -74,21 +68,17 @@ export default function ServicesComponent() {
         </svg>
       ),
       title: "CRM/ERP системы",
-      shortDesc: "Кастомные системы управления бизнесом",
-      problem: "Данные о клиентах разбросаны по разным таблицам, менеджеры забывают о задачах, нет прозрачности в процессах.",
-      solution: "Разрабатываем кастомные системы управления под специфику вашего бизнеса с нужными именно вам функциями.",
-      result: "Централизованная база данных, автоматические напоминания, полная картина бизнеса в реальном времени.",
+      shortDesc: "Кастомные системы управления бизнесом для автоматизации продаж, учёта и аналитики.",
       features: [
         "Управление клиентами",
         "Воронки продаж",
         "Складской учёт",
-        "Документооборот",
         "Аналитика и отчёты",
-        "Мобильный доступ",
       ],
-      technologies: ["Node.js", "PostgreSQL", "React", "Redis"],
       price: "от 400 000 ₽",
       timeline: "2-4 месяца",
+      gradient: "from-[#00d4ff] to-[#8b5cf6]",
+      color: "#00d4ff",
     },
     {
       id: "automation",
@@ -99,21 +89,17 @@ export default function ServicesComponent() {
         </svg>
       ),
       title: "Автоматизация бизнеса",
-      shortDesc: "Оптимизация рутинных процессов и интеграции",
-      problem: "Сотрудники тратят часы на рутинные задачи: ручной перенос данных, формирование отчётов, отправку уведомлений.",
-      solution: "Автоматизируем повторяющиеся процессы, настраиваем интеграции между системами, создаём ботов для типовых задач.",
-      result: "Экономия рабочего времени, снижение ошибок, ускорение бизнес-процессов.",
+      shortDesc: "Оптимизация рутинных процессов, чат-боты, автоматические отчёты и уведомления.",
       features: [
         "Интеграции систем",
         "Телеграм/WhatsApp боты",
         "Автоматические отчёты",
-        "Email-рассылки",
-        "Синхронизация данных",
         "Триггерные сценарии",
       ],
-      technologies: ["Python", "Node.js", "API", "Webhooks"],
       price: "от 100 000 ₽",
       timeline: "2-6 недель",
+      gradient: "from-[#8b5cf6] to-[#ec4899]",
+      color: "#8b5cf6",
     },
     {
       id: "api-integrations",
@@ -123,21 +109,17 @@ export default function ServicesComponent() {
         </svg>
       ),
       title: "API и интеграции",
-      shortDesc: "Связываем системы в единую экосистему",
-      problem: "Разные системы не связаны между собой: данные приходится вводить вручную несколько раз, информация расходится.",
-      solution: "Разрабатываем API для связи систем, настраиваем интеграции с платёжными системами, CRM, 1C, маркетплейсами.",
-      result: "Единый поток данных, исключение ручного ввода, консистентная информация во всех системах.",
+      shortDesc: "Связываем системы в единую экосистему: 1C, платёжные системы, маркетплейсы.",
       features: [
         "REST/GraphQL API",
         "Интеграция с 1C",
         "Платёжные системы",
         "Маркетплейсы",
-        "Службы доставки",
-        "Сторонние сервисы",
       ],
-      technologies: ["REST", "GraphQL", "WebSocket", "OAuth"],
       price: "от 80 000 ₽",
       timeline: "2-4 недели",
+      gradient: "from-[#ec4899] to-[#f97316]",
+      color: "#ec4899",
     },
     {
       id: "support",
@@ -147,25 +129,41 @@ export default function ServicesComponent() {
         </svg>
       ),
       title: "Поддержка и развитие",
-      shortDesc: "Техническое сопровождение и развитие продукта",
-      problem: "Система работает, но требует постоянного внимания: обновления, мониторинг, исправление ошибок, новые фичи.",
-      solution: "Берём на себя техническую поддержку: мониторинг, резервное копирование, обновления и развитие функционала.",
-      result: "Стабильная работа системы, быстрое решение проблем, планомерное развитие продукта.",
+      shortDesc: "Техническое сопровождение: мониторинг, обновления, развитие функционала.",
       features: [
         "Мониторинг 24/7",
         "Резервное копирование",
         "Обновления безопасности",
-        "Исправление багов",
         "Новый функционал",
-        "Консультации",
       ],
-      technologies: ["Docker", "AWS", "CI/CD", "Monitoring"],
       price: "от 30 000 ₽/мес",
       timeline: "Постоянно",
+      gradient: "from-[#f97316] to-[#00ff88]",
+      color: "#f97316",
     },
   ];
 
-  const selectedServiceData = services.find((s) => s.id === selectedService);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
 
   return (
     <section ref={sectionRef} className="pt-32 pb-24 lg:pb-32 bg-[#0a0e17] min-h-screen relative overflow-hidden">
@@ -200,33 +198,50 @@ export default function ServicesComponent() {
         </motion.div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
-          {services.map((service, index) => (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16"
+        >
+          {services.map((service) => (
             <motion.div
               key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.1,
-                ease: [0.16, 1, 0.3, 1],
-              }}
+              variants={itemVariants}
+              onMouseEnter={() => setHoveredService(service.id)}
+              onMouseLeave={() => setHoveredService(null)}
+              className="group relative"
             >
-              <div
-                onClick={() => setSelectedService(service.id)}
-                className={`group cursor-pointer p-8 rounded-2xl border transition-all duration-500 h-full card-hover ${
-                  selectedService === service.id
-                    ? "bg-[#00ff88]/10 border-[#00ff88] glow-green"
-                    : "bg-[#0f1520] border-[#1f2937] hover:border-[#00ff88]/30"
-                }`}
+              {/* Glow effect */}
+              <div 
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                style={{ 
+                  background: `linear-gradient(135deg, ${service.color}20, transparent)`,
+                  opacity: hoveredService === service.id ? 0.3 : 0
+                }}
+              />
+
+              <Link
+                href={`/services/${service.id}`}
+                className="block relative p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-500 card-hover h-full overflow-hidden"
               >
+                {/* Animated top gradient bar */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient} opacity-50 group-hover:opacity-100 transition-opacity duration-300`} />
+
+                {/* Shimmer effect on hover */}
+                <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100 pointer-events-none" />
+
                 {/* Icon */}
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-300 ${
-                  selectedService === service.id
-                    ? "bg-[#00ff88] text-[#0a0e17]"
-                    : "bg-[#00ff88]/10 text-[#00ff88] group-hover:bg-[#00ff88]/20"
-                }`}>
+                <div 
+                  className="relative w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
+                  style={{ backgroundColor: `${service.color}15`, color: service.color }}
+                >
                   {service.icon}
+                  {/* Icon glow */}
+                  <div 
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg"
+                    style={{ backgroundColor: service.color }}
+                  />
                 </div>
 
                 {/* Title */}
@@ -235,133 +250,41 @@ export default function ServicesComponent() {
                 </h3>
 
                 {/* Short Description */}
-                <p className="text-white/60 mb-6">
+                <p className="text-white/60 mb-6 leading-relaxed">
                   {service.shortDesc}
                 </p>
 
+                {/* Features */}
+                <div className="space-y-2 mb-6">
+                  {service.features.map((feature, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-white/70 group-hover:text-white/80 transition-colors"
+                    >
+                      <svg className="w-4 h-4 text-[#00ff88] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {feature}
+                    </div>
+                  ))}
+                </div>
+
                 {/* Price & Timeline */}
-                <div className="flex items-center justify-between pt-4 border-t border-[#1f2937]">
+                <div className="flex items-center justify-between pt-4 border-t border-[#1f2937] group-hover:border-[#00ff88]/20 transition-colors">
                   <span className="text-[#00ff88] font-semibold">{service.price}</span>
                   <span className="text-white/40 text-sm">{service.timeline}</span>
                 </div>
 
-                {/* Expand indicator */}
-                <div className="mt-4 flex items-center text-sm text-white/40 group-hover:text-[#00ff88] transition-colors">
-                  <span>Подробнее</span>
-                  <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                {/* Arrow indicator */}
+                <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                  <svg className="w-6 h-6 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
-        </div>
-
-        {/* Service Detail Modal */}
-        <AnimatePresence>
-          {selectedServiceData && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-              onClick={() => setSelectedService(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="bg-[#0f1520] border border-[#1f2937] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="p-8 lg:p-10">
-                  {/* Header */}
-                  <div className="flex items-start justify-between mb-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-xl bg-[#00ff88]/10 flex items-center justify-center text-[#00ff88]">
-                        {selectedServiceData.icon}
-                      </div>
-                      <div>
-                        <h2 className="text-2xl lg:text-3xl font-bold text-white">
-                          {selectedServiceData.title}
-                        </h2>
-                        <p className="text-white/60">{selectedServiceData.shortDesc}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setSelectedService(null)}
-                      className="w-10 h-10 rounded-full bg-[#1f2937] flex items-center justify-center text-white/60 hover:bg-[#00ff88] hover:text-[#0a0e17] transition-colors"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {/* Problem - Solution - Result */}
-                  <div className="grid md:grid-cols-3 gap-6 mb-8">
-                    <div className="p-6 rounded-xl bg-[#ff6b6b]/10 border border-[#ff6b6b]/20">
-                      <span className="text-xs uppercase tracking-wider text-[#ff6b6b] font-medium">Проблема</span>
-                      <p className="text-white/80 mt-2">{selectedServiceData.problem}</p>
-                    </div>
-                    <div className="p-6 rounded-xl bg-[#00d4ff]/10 border border-[#00d4ff]/20">
-                      <span className="text-xs uppercase tracking-wider text-[#00d4ff] font-medium">Решение</span>
-                      <p className="text-white/80 mt-2">{selectedServiceData.solution}</p>
-                    </div>
-                    <div className="p-6 rounded-xl bg-[#00ff88]/10 border border-[#00ff88]/20">
-                      <span className="text-xs uppercase tracking-wider text-[#00ff88] font-medium">Результат</span>
-                      <p className="text-white/80 mt-2">{selectedServiceData.result}</p>
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-white mb-4">Что входит</h3>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {selectedServiceData.features.map((feature, i) => (
-                        <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#0a0e17] border border-[#1f2937]">
-                          <span className="text-[#00ff88]">✓</span>
-                          <span className="text-white/80">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Technologies */}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-white mb-4">Технологии</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedServiceData.technologies.map((tech, i) => (
-                        <span key={i} className="px-3 py-1 rounded-full bg-[#00ff88]/10 text-[#00ff88] text-sm font-mono">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Price & CTA */}
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[#1f2937]">
-                    <div>
-                      <span className="text-white/60">Стоимость:</span>
-                      <span className="ml-2 text-2xl font-bold text-[#00ff88]">{selectedServiceData.price}</span>
-                      <span className="ml-4 text-white/40">• {selectedServiceData.timeline}</span>
-                    </div>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center px-6 py-3 bg-[#00ff88] text-[#0a0e17] font-semibold rounded-full hover:bg-[#00cc6a] transition-all duration-300 hover:scale-105"
-                    >
-                      Заказать услугу
-                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        </motion.div>
 
         {/* CTA Section */}
         <motion.div

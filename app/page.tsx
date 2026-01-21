@@ -4,6 +4,8 @@ import HomeHowWeWorkSection from "@/components/home/HomeHowWeWorkSection";
 import HomeTechnologiesSection from "@/components/home/HomeTechnologiesSection";
 import HomeTestimonialsSection from "@/components/home/HomeTestimonialsSection";
 import HomeWhatWeDoSection from "@/components/home/HomeWhatWeDoSection";
+import HomeWhyUsSection from "@/components/home/HomeWhyUsSection";
+import HomeProjectsPreviewSection from "@/components/home/HomeProjectsPreviewSection";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -23,6 +25,8 @@ export default function Home() {
     <main>
       <HomeHeroSection />
       <HomeWhatWeDoSection />
+      <HomeWhyUsSection />
+      <HomeProjectsPreviewSection />
       <HomeHowWeWorkSection />
       <HomeTechnologiesSection />
       <HomeTestimonialsSection />
