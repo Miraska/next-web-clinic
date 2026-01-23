@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import ChatWidget from "@/components/ui/ChatWidget";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
@@ -60,6 +61,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <ChatWidget />
       </body>
     </html>
   );
