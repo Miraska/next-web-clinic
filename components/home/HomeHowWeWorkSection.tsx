@@ -1,13 +1,14 @@
 "use client";
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ConsultationModal from "@/components/ui/ConsultationModal";
 
 export default function HomeHowWeWorkSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState<number | null>(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const steps = [
     {
@@ -105,6 +106,31 @@ export default function HomeHowWeWorkSection() {
     rose: { bg: "bg-rose-100", text: "text-rose-600", light: "bg-rose-50", border: "border-rose-200" },
   };
 
+  useEffect(() => {
+    if (!isInView) return;
+    if (isPaused) return;
+
+    const id = window.setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % steps.length);
+    }, 6000);
+
+    return () => window.clearInterval(id);
+  }, [isInView, isPaused, steps.length]);
+
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      setIsPaused(document.visibilityState !== "visible");
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, []);
+
+  const goPrev = () => setActiveStep((prev) => (prev - 1 + steps.length) % steps.length);
+  const goNext = () => setActiveStep((prev) => (prev + 1) % steps.length);
+
+  const active = steps[activeStep];
+  const activeColors = colorClasses[active.color];
+
   return (
     <>
       <section ref={sectionRef} className="py-16 lg:py-24 bg-slate-50 relative overflow-hidden">
@@ -131,123 +157,231 @@ export default function HomeHowWeWorkSection() {
             </p>
           </motion.div>
 
-          {/* Desktop Timeline */}
-          <div className="hidden lg:block">
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-200 -translate-y-1/2 rounded-full" />
-              <motion.div 
-                initial={{ scaleX: 0 }}
-                animate={isInView ? { scaleX: 1 } : {}}
-                transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-rose-500 -translate-y-1/2 rounded-full origin-left"
-              />
+          {/* JS-driven auto-switching steps (stable, no hover-height hacks) */}
+          <div
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onFocusCapture={() => setIsPaused(true)}
+            onBlurCapture={() => setIsPaused(false)}
+          >
+            {/* Desktop: list + active card */}
+            <div className="hidden lg:grid grid-cols-12 gap-10 items-start">
+              <div className="col-span-5">
+                <div className="space-y-2">
+                  {steps.map((step, index) => {
+                    const colors = colorClasses[step.color];
+                    const isActive = index === activeStep;
 
-              {/* Steps */}
-              <div className="grid grid-cols-6 gap-4">
-                {steps.map((step, index) => {
-                  const colors = colorClasses[step.color];
-                  const isActive = activeStep === index;
-                  
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
-                      onMouseEnter={() => setActiveStep(index)}
-                      onMouseLeave={() => setActiveStep(null)}
-                      className="relative pt-8"
-                    >
-                      {/* Step number circle */}
-                      <motion.div 
-                        animate={isActive ? { scale: 1.2 } : { scale: 1 }}
-                        className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold text-lg shadow-lg z-10 transition-all duration-300 ${isActive ? 'ring-4 ring-white' : ''}`}
+                    return (
+                      <button
+                        key={step.num}
+                        type="button"
+                        onClick={() => setActiveStep(index)}
+                        className={[
+                          "w-full text-left rounded-2xl border transition-all duration-200",
+                          "px-4 py-3 flex items-center gap-4",
+                          isActive ? `bg-white shadow-lg ${colors.border}` : "bg-white/60 border-slate-200 hover:bg-white",
+                        ].join(" ")}
+                        aria-current={isActive ? "step" : undefined}
                       >
-                        {step.num}
-                      </motion.div>
-
-                      {/* Card */}
-                      <div className={`p-5 rounded-2xl transition-all duration-300 ${isActive ? `bg-white shadow-xl border ${colors.border}` : 'bg-white/70 border border-transparent'}`}>
-                        <div className={`w-10 h-10 rounded-xl ${colors.light} ${colors.text} flex items-center justify-center mb-3`}>
-                          {step.icon}
+                        <div className={`w-11 h-11 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center font-bold shrink-0`}>
+                          {step.num}
                         </div>
-                        <h3 className="font-bold text-slate-900 mb-1">{step.title}</h3>
-                        <p className="text-xs text-slate-400 mb-2">{step.subtitle}</p>
-                        
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={isActive ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          <p className="text-sm text-slate-600 mb-3">{step.description}</p>
-                          <div className={`text-xs ${colors.text} font-medium px-2 py-1 ${colors.light} rounded-md inline-block`}>
-                            → {step.result}
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <div className="font-semibold text-slate-900 truncate">{step.title}</div>
+                            {isActive && (
+                              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${colors.light} ${colors.text}`}>
+                                сейчас
+                              </span>
+                            )}
                           </div>
-                        </motion.div>
+                          <div className="text-sm text-slate-500 truncate">{step.subtitle}</div>
+                        </div>
+                        <div className="ml-auto text-xs text-slate-400 whitespace-nowrap">{step.duration}</div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                        {!isActive && (
-                          <p className="text-xs text-slate-400 mt-1">{step.duration}</p>
-                        )}
+                <div className="mt-5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={goPrev}
+                      className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                      aria-label="Предыдущий шаг"
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      onClick={goNext}
+                      className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                      aria-label="Следующий шаг"
+                    >
+                      →
+                    </button>
+                    <div className="text-xs text-slate-400 ml-2">
+                      {isPaused ? "Пауза" : "Авто"} • {activeStep + 1}/{steps.length}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    {steps.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setActiveStep(i)}
+                        className={[
+                          "h-2 rounded-full transition-all",
+                          i === activeStep ? "w-8 bg-blue-600" : "w-2 bg-slate-300 hover:bg-slate-400",
+                        ].join(" ")}
+                        aria-label={`Перейти к шагу ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-span-7">
+                <motion.div
+                  key={active.num}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.35 }}
+                  className={`rounded-3xl bg-white border ${activeColors.border} shadow-xl p-8`}
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-2xl ${activeColors.light} ${activeColors.text} flex items-center justify-center`}>
+                        {active.icon}
                       </div>
-                    </motion.div>
+                      <div>
+                        <div className="text-sm text-slate-500">{active.subtitle}</div>
+                        <h3 className="text-2xl font-bold text-slate-900 leading-tight">
+                          {active.title}
+                        </h3>
+                      </div>
+                    </div>
+                    <div className="text-sm text-slate-500 whitespace-nowrap">{active.duration}</div>
+                  </div>
+
+                  <p className="mt-6 text-slate-700 leading-relaxed">{active.description}</p>
+
+                  <div className="mt-6">
+                    <div className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-xl ${activeColors.light} ${activeColors.text}`}>
+                      <span aria-hidden>→</span>
+                      <span>{active.result}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Mobile: one card + controls */}
+            <div className="lg:hidden">
+              <motion.div
+                key={active.num}
+                initial={{ opacity: 0, x: -12 }}
+                animate={isInView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.3 }}
+                className={`rounded-2xl bg-white border ${activeColors.border} shadow-lg p-5`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`w-10 h-10 rounded-xl ${activeColors.bg} ${activeColors.text} flex items-center justify-center font-bold`}>
+                      {active.num}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-slate-900 truncate">{active.title}</div>
+                      <div className="text-sm text-slate-500 truncate">{active.subtitle}</div>
+                    </div>
+                  </div>
+                  <div className="text-xs text-slate-400 whitespace-nowrap">{active.duration}</div>
+                </div>
+
+                <p className="mt-4 text-slate-700 text-sm leading-relaxed">{active.description}</p>
+
+                <div className={`mt-4 inline-flex items-center gap-2 text-xs font-medium px-2.5 py-1.5 rounded-lg ${activeColors.light} ${activeColors.text}`}>
+                  <span aria-hidden>→</span>
+                  <span>{active.result}</span>
+                </div>
+
+                <div className="mt-5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={goPrev}
+                      className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                      aria-label="Предыдущий шаг"
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      onClick={goNext}
+                      className="px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+                      aria-label="Следующий шаг"
+                    >
+                      →
+                    </button>
+                    <div className="text-xs text-slate-400">
+                      {activeStep + 1}/{steps.length}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    {steps.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setActiveStep(i)}
+                        className={[
+                          "h-2 rounded-full transition-all",
+                          i === activeStep ? "w-7 bg-blue-600" : "w-2 bg-slate-300",
+                        ].join(" ")}
+                        aria-label={`Перейти к шагу ${i + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {steps.map((step, i) => {
+                  const isActive = i === activeStep;
+                  return (
+                    <button
+                      key={step.num}
+                      type="button"
+                      onClick={() => setActiveStep(i)}
+                      className={[
+                        "text-left rounded-xl border px-3 py-2 transition-colors",
+                        isActive ? "bg-slate-900 text-white border-slate-900" : "bg-white border-slate-200 text-slate-700",
+                      ].join(" ")}
+                    >
+                      <div className="text-xs opacity-80">{step.num}</div>
+                      <div className="text-sm font-semibold truncate">{step.title}</div>
+                    </button>
                   );
                 })}
               </div>
             </div>
           </div>
 
-          {/* Mobile Timeline */}
-          <div className="lg:hidden space-y-4">
-            {steps.map((step, index) => {
-              const colors = colorClasses[step.color];
-              
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
-                  className="flex gap-4"
-                >
-                  {/* Number & Line */}
-                  <div className="flex flex-col items-center">
-                    <div className={`w-10 h-10 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold text-sm flex-shrink-0`}>
-                      {step.num}
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div className="w-0.5 flex-1 bg-slate-200 my-2" />
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="pb-6 flex-1">
-                    <div className="p-4 rounded-xl bg-white border border-slate-200">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-bold text-slate-900">{step.title}</h3>
-                        <span className="text-xs text-slate-400">{step.duration}</span>
-                      </div>
-                      <p className="text-sm text-slate-400 mb-2">{step.subtitle}</p>
-                      <p className="text-sm text-slate-600 mb-3">{step.description}</p>
-                      <div className={`text-xs ${colors.text} font-medium px-2 py-1 ${colors.light} rounded-md inline-block`}>
-                        → {step.result}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
           {/* CTA */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-12 text-center"
           >
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setActiveStep(0);
+                setIsModalOpen(true);
+              }}
               className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-600/20"
               data-cta="how-we-work-start"
             >
@@ -257,7 +391,7 @@ export default function HomeHowWeWorkSection() {
               </svg>
             </button>
             <p className="text-slate-400 text-sm mt-3">Бесплатная консультация • Ответ за 2 часа</p>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
 

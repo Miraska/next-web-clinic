@@ -7,7 +7,6 @@ import HomeWhyUsSection from "@/components/home/HomeWhyUsSection";
 import HomeProjectsPreviewSection from "@/components/home/HomeProjectsPreviewSection";
 import HomeForWhomSection from "@/components/home/HomeForWhomSection";
 import HomeStatsSection from "@/components/home/HomeStatsSection";
-import HomeClientsSection from "@/components/home/HomeClientsSection";
 import HomePricingSection from "@/components/home/HomePricingSection";
 import HomeFinalCTASection from "@/components/home/HomeFinalCTASection";
 import type { Metadata } from "next";
@@ -39,8 +38,6 @@ export default function Home() {
       {/* Кому подходим / не подходим */}
       <HomeForWhomSection />
       
-      {/* Сферы с которыми работаем */}
-      <HomeClientsSection />
       
       {/* Тарифы и цены */}
       <HomePricingSection />

@@ -152,7 +152,7 @@ export default function HomeTestimonialsSection() {
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                    <div className={`w-25 h-12 rounded-xl flex items-center justify-center transition-colors ${
                       isActive ? `${colors.bg} ${colors.text}` : 'bg-slate-200 text-slate-500'
                     }`}>
                       {guarantee.icon}

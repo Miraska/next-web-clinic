@@ -3,216 +3,11 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import ConsultationModal from "@/components/ui/ConsultationModal";
+import { projectsData } from "@/lib/projects";
 
 interface ProjectDetailProps {
   slug: string;
 }
-
-interface ProjectData {
-  id: string;
-  title: string;
-  category: string;
-  industry: string;
-  description: string;
-  client: string;
-  challenge: {
-    title: string;
-    description: string;
-    problems: string[];
-  };
-  solution: {
-    title: string;
-    description: string;
-    features: string[];
-  };
-  process: {
-    step: string;
-    title: string;
-    description: string;
-    duration: string;
-  }[];
-  results: {
-    metric: string;
-    value: string;
-    description: string;
-  }[];
-  technologies: string[];
-  timeline: string;
-  testimonial?: {
-    text: string;
-    author: string;
-    position: string;
-  };
-  color: string;
-}
-
-const projectsData: Record<string, ProjectData> = {
-  "crm-logistics": {
-    id: "crm-logistics",
-    title: "CRM для логистической компании",
-    category: "CRM/ERP",
-    industry: "Логистика",
-    description: "Кастомная CRM-система для управления грузоперевозками с полным циклом от заявки до доставки.",
-    client: "Транспортная компания (NDA)",
-    challenge: {
-      title: "Хаос в обработке заявок",
-      description: "До внедрения системы компания справлялась с потоком заявок с помощью Excel и почты. Это приводило к потерям клиентов и ошибкам.",
-      problems: [
-        "Обработка заявки занимала до 30 минут",
-        "Данные хранились в разных Excel-файлах",
-        "Клиенты не могли отследить статус груза",
-        "Менеджеры дублировали работу друг друга",
-        "Руководство не видело реальной картины",
-      ],
-    },
-    solution: {
-      title: "Единая система управления",
-      description: "Разработали CRM, которая объединила все процессы: от первого контакта с клиентом до подтверждения доставки.",
-      features: [
-        "Единая база заявок с историей изменений",
-        "Автоматический расчёт стоимости перевозки",
-        "GPS-трекинг грузов в реальном времени",
-        "Личный кабинет для клиентов",
-        "Мобильное приложение для водителей",
-        "Автоматические уведомления о статусе",
-        "Дашборды для руководства",
-        "Интеграция с 1С и бухгалтерией",
-      ],
-    },
-    process: [
-      { step: "01", title: "Аудит процессов", description: "Изучили текущую работу компании, провели интервью с сотрудниками", duration: "2 недели" },
-      { step: "02", title: "Проектирование", description: "Спроектировали архитектуру системы и согласовали требования", duration: "2 недели" },
-      { step: "03", title: "MVP", description: "Разработали базовый функционал: заявки, клиенты, расчёт стоимости", duration: "6 недель" },
-      { step: "04", title: "Трекинг", description: "Добавили GPS-отслеживание и личный кабинет клиента", duration: "4 недели" },
-      { step: "05", title: "Интеграции", description: "Настроили обмен данными с 1С и внешними сервисами", duration: "2 недели" },
-      { step: "06", title: "Запуск", description: "Обучили сотрудников, мигрировали данные, запустили в работу", duration: "2 недели" },
-    ],
-    results: [
-      { metric: "-83%", value: "Время обработки заявки", description: "Было 30 минут, стало 5 минут" },
-      { metric: "80%", value: "Автоматизация процессов", description: "Рутинные операции выполняются без участия человека" },
-      { metric: "0", value: "Потерянных заявок", description: "Все обращения фиксируются и отслеживаются" },
-      { metric: "+25%", value: "Рост выручки", description: "За счёт ускорения обработки и снижения потерь" },
-    ],
-    technologies: ["React", "Node.js", "PostgreSQL", "Docker", "Redis", "WebSocket", "React Native"],
-    timeline: "Январь-Апрель 2024 (4 месяца)",
-    testimonial: {
-      text: "Ребята реально вникли в нашу специфику. Не просто сделали \"как попросили\", а предложили решения, до которых мы сами не додумались. Теперь экономим часы каждый день.",
-      author: "Алексей К.",
-      position: "Руководитель отдела логистики",
-    },
-    color: "blue",
-  },
-  "ecommerce-platform": {
-    id: "ecommerce-platform",
-    title: "Интернет-магазин товаров для дома",
-    category: "E-commerce",
-    industry: "Розница",
-    description: "Высоконагруженный интернет-магазин с 5000+ товаров и полной автоматизацией.",
-    client: "Сеть магазинов товаров для дома",
-    challenge: {
-      title: "Устаревший сайт тормозил продажи",
-      description: "Старый сайт работал медленно, не синхронизировался с учётной системой, заказы обрабатывались вручную.",
-      problems: [
-        "Страницы загружались 5-7 секунд",
-        "Каталог не синхронизировался с 1С",
-        "Заказы вручную переносились в систему учёта",
-        "Низкая конверсия — менее 1%",
-        "Сайт плохо работал на телефонах",
-      ],
-    },
-    solution: {
-      title: "Современный быстрый магазин",
-      description: "Создали новый интернет-магазин на современном стеке с полной интеграцией всех систем.",
-      features: [
-        "Время загрузки менее 1 секунды",
-        "Двусторонняя синхронизация с 1С",
-        "Автоматическая обработка заказов",
-        "Умный поиск и фильтры",
-        "Личный кабинет с историей заказов",
-        "Интеграция с несколькими службами доставки",
-        "Онлайн-оплата (ЮKassa, СБП)",
-        "PWA для мобильных устройств",
-      ],
-    },
-    process: [
-      { step: "01", title: "Аналитика", description: "Изучили текущий сайт, поведение пользователей, конкурентов", duration: "2 недели" },
-      { step: "02", title: "UX/UI дизайн", description: "Разработали дизайн с фокусом на конверсию", duration: "3 недели" },
-      { step: "03", title: "Разработка каталога", description: "Создали систему товаров, категорий, фильтров", duration: "4 недели" },
-      { step: "04", title: "Интеграция 1С", description: "Настроили обмен товарами, остатками, ценами, заказами", duration: "3 недели" },
-      { step: "05", title: "Оплата и доставка", description: "Подключили платёжные системы и службы доставки", duration: "2 недели" },
-      { step: "06", title: "Тестирование и запуск", description: "Нагрузочное тестирование, миграция контента, запуск", duration: "2 недели" },
-    ],
-    results: [
-      { metric: "+40%", value: "Рост конверсии", description: "С 0.8% до 1.1% — за счёт скорости и UX" },
-      { metric: "<1 сек", value: "Время загрузки", description: "Было 5-7 секунд, стало менее 1" },
-      { metric: "0", value: "Ручных операций", description: "Заказы автоматически попадают в 1С" },
-      { metric: "+60%", value: "Мобильный трафик", description: "PWA привлекает больше мобильных пользователей" },
-    ],
-    technologies: ["Next.js", "TypeScript", "PostgreSQL", "1C API", "Redis", "Vercel", "YooKassa"],
-    timeline: "Февраль-Май 2024 (3.5 месяца)",
-    testimonial: {
-      text: "Честно, не верила, что можно так ускорить сайт. Теперь клиенты не уходят с первой страницы, а заказы сами падают в 1С. Мечта!",
-      author: "Мария С.",
-      position: "Владелец магазина",
-    },
-    color: "emerald",
-  },
-  "hr-portal": {
-    id: "hr-portal",
-    title: "HR-портал для производственного холдинга",
-    category: "Веб-приложение",
-    industry: "Производство",
-    description: "Внутренний портал для 500+ сотрудников с автоматизацией HR-процессов.",
-    client: "Производственный холдинг (NDA)",
-    challenge: {
-      title: "HR-отдел тонул в бумагах",
-      description: "Все HR-процессы велись на бумаге и в Excel. Сотрудники тратили время на ручную работу вместо развития компании.",
-      problems: [
-        "Заявления на отпуск через email и бумагу",
-        "Табели учёта рабочего времени в Excel",
-        "Нет единой базы сотрудников",
-        "Обучение не отслеживалось",
-        "Руководители не видели KPI команды",
-      ],
-    },
-    solution: {
-      title: "Единый HR-портал",
-      description: "Создали портал, который автоматизировал рутинные HR-процессы и дал прозрачность всем участникам.",
-      features: [
-        "Электронный документооборот (заявления, приказы)",
-        "Автоматический расчёт отпусков и больничных",
-        "Система постановки и отслеживания KPI",
-        "Модуль обучения с курсами и тестами",
-        "Интеграция с 1С ЗУП",
-        "Telegram-бот для быстрых запросов",
-        "Мобильная версия для сотрудников",
-        "Дашборды для руководителей",
-      ],
-    },
-    process: [
-      { step: "01", title: "Исследование", description: "Провели интервью с HR и сотрудниками, описали процессы", duration: "2 недели" },
-      { step: "02", title: "Проектирование", description: "Разработали архитектуру и согласовали функционал", duration: "2 недели" },
-      { step: "03", title: "Документооборот", description: "Создали систему заявлений, согласований, приказов", duration: "5 недель" },
-      { step: "04", title: "KPI и обучение", description: "Добавили модули целей и онлайн-курсов", duration: "4 недели" },
-      { step: "05", title: "Интеграции", description: "Связали с 1С ЗУП, создали Telegram-бота", duration: "3 недели" },
-      { step: "06", title: "Внедрение", description: "Обучили HR, провели пилот, запустили на всех", duration: "2 недели" },
-    ],
-    results: [
-      { metric: "60%", value: "Экономия времени HR", description: "На рутинных операциях" },
-      { metric: "500+", value: "Сотрудников", description: "Пользуются порталом ежедневно" },
-      { metric: "100%", value: "Прозрачность", description: "Все процессы видны руководству" },
-      { metric: "5", value: "Интеграций", description: "С внешними системами" },
-    ],
-    technologies: ["React", "Node.js", "MongoDB", "1C ЗУП API", "Telegram Bot API", "Docker"],
-    timeline: "Март-Июль 2024 (5 месяцев)",
-    testimonial: {
-      text: "Наконец-то избавились от бумаг! Сотрудники сами подают заявления, руководители согласовывают в один клик. HR теперь занимается развитием, а не бюрократией.",
-      author: "Елена П.",
-      position: "HR-директор",
-    },
-    color: "violet",
-  },
-};
 
 export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -239,6 +34,7 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
     blue: { bg: "bg-blue-100", text: "text-blue-600", light: "bg-blue-50", border: "border-blue-200" },
     emerald: { bg: "bg-emerald-100", text: "text-emerald-600", light: "bg-emerald-50", border: "border-emerald-200" },
     violet: { bg: "bg-violet-100", text: "text-violet-600", light: "bg-violet-50", border: "border-violet-200" },
+    cyan: { bg: "bg-cyan-100", text: "text-cyan-600", light: "bg-cyan-50", border: "border-cyan-200" },
   };
 
   const colors = colorClasses[project.color] || colorClasses.blue;
@@ -324,7 +120,7 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                 <ul className="space-y-2">
                   {project.challenge.problems.map((problem, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                      <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                       {problem}
@@ -347,7 +143,7 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                 <ul className="space-y-2">
                   {project.solution.features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                      <svg className={`w-4 h-4 ${colors.text} flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className={`w-4 h-4 ${colors.text} shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       {feature}
@@ -452,7 +248,7 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.35 }}
           >
-            <div className="p-8 lg:p-10 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+            <div className="p-8 lg:p-10 rounded-2xl bg-linear-to-r from-blue-600 to-blue-700 text-white">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div>
                   <h3 className="text-2xl font-bold mb-2">

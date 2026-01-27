@@ -1,5 +1,6 @@
 "use client";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 
@@ -100,13 +101,26 @@ export default function HomeProjectsPreviewSection() {
                   <div className="p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-xl hover:border-slate-300 transition-all duration-300 h-full flex flex-col">
                     {/* Image placeholder */}
                     <div className={`relative h-48 rounded-xl ${colors.light} mb-5 overflow-hidden`}>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className={`text-6xl opacity-30 group-hover:scale-110 transition-transform duration-300`}>
-                          {project.category === "CRM/ERP" && "📊"}
-                          {project.category === "E-commerce" && "🛒"}
-                          {project.category === "Веб-приложение" && "💼"}
+                      {project.image ? (
+                        <>
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                            className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-slate-900/25 via-slate-900/0 to-slate-900/0" />
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="text-6xl opacity-30 group-hover:scale-110 transition-transform duration-300">
+                            {project.category === "CRM/ERP" && "📊"}
+                            {project.category === "E-commerce" && "🛒"}
+                            {project.category === "Веб-приложение" && "💼"}
+                          </div>
                         </div>
-                      </div>
+                      )}
                       {/* Hover overlay */}
                       <motion.div
                         initial={{ opacity: 0 }}
@@ -130,7 +144,7 @@ export default function HomeProjectsPreviewSection() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                    <p className="text-slate-600 text-sm leading-relaxed mb-4 grow">
                       {project.description}
                     </p>
 
