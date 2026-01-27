@@ -1,245 +1,267 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import Link from "next/link";
+import ConsultationModal from "@/components/ui/ConsultationModal";
 
 export default function HomeHowWeWorkSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const [activeStep, setActiveStep] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   const steps = [
     {
-      number: "1",
-      title: "Вы рассказываете задачу",
-      description: "Созваниваемся или переписываемся. Вы объясняете, что нужно сделать, какая проблема, какой результат хотите получить.",
-      whatYouGet: "Понимание, сможем ли мы помочь",
-      duration: "1-2 дня",
+      num: "01",
+      title: "Знакомство",
+      subtitle: "Бесплатная консультация",
+      duration: "30-60 минут",
+      description: "Созваниваемся или переписываемся. Вы рассказываете о бизнесе и задаче, мы задаём уточняющие вопросы. Понимаем, можем ли помочь.",
+      result: "Понимание задачи и предварительная оценка",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      ),
       color: "blue",
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-      ),
     },
     {
-      number: "2",
-      title: "Мы предлагаем решение",
-      description: "Рассказываем, как можно сделать вашу задачу, сколько это будет стоить и сколько займёт времени. Объясняем простыми словами.",
-      whatYouGet: "Чёткое предложение с ценой и сроками",
+      num: "02",
+      title: "Анализ и КП",
+      subtitle: "Детальное предложение",
       duration: "2-5 дней",
+      description: "Готовим коммерческое предложение: что будем делать, какие технологии, сколько времени займёт и сколько стоит. Без скрытых условий.",
+      result: "Чёткое ТЗ с ценой и сроками",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
       color: "emerald",
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
     },
     {
-      number: "3",
-      title: "Делаем работу",
-      description: "Работаем над проектом, регулярно показываем промежуточные результаты. Вы видите прогресс и можете вносить коррективы.",
-      whatYouGet: "Регулярные демонстрации и отчёты",
-      duration: "4-12 недель",
+      num: "03",
+      title: "Договор",
+      subtitle: "Официальное оформление",
+      duration: "1-2 дня",
+      description: "Подписываем договор, где прописаны все условия: объём работ, сроки, стоимость, гарантии. Вносите предоплату 50%, мы приступаем.",
+      result: "Юридическая защита обеих сторон",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      ),
       color: "violet",
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-        </svg>
-      ),
     },
     {
-      number: "4",
-      title: "Запускаем и помогаем",
-      description: "Размещаем проект в интернете, показываем как им пользоваться. После запуска 3 месяца бесплатно исправляем ошибки.",
-      whatYouGet: "Работающий проект + 3 месяца гарантии",
-      duration: "3-7 дней",
-      color: "orange",
+      num: "04",
+      title: "Разработка",
+      subtitle: "Итерационный процесс",
+      duration: "По плану",
+      description: "Работаем спринтами: регулярно показываем прогресс, собираем обратную связь, вносим корректировки. Вы всегда в курсе статуса.",
+      result: "Демо каждые 1-2 недели",
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
         </svg>
       ),
+      color: "orange",
+    },
+    {
+      num: "05",
+      title: "Тестирование",
+      subtitle: "Проверка качества",
+      duration: "1-2 недели",
+      description: "Тестируем на разных устройствах, исправляем баги, оптимизируем производительность. Вы проверяете и принимаете работу.",
+      result: "Готовый к запуску продукт",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+      ),
+      color: "cyan",
+    },
+    {
+      num: "06",
+      title: "Запуск",
+      subtitle: "Старт и поддержка",
+      duration: "1-3 дня",
+      description: "Размещаем на хостинге, настраиваем домен, подключаем аналитику. Обучаем вас работе с админкой. Начинается гарантийный период.",
+      result: "Работающий проект + 3 месяца гарантии",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+      color: "rose",
     },
   ];
 
-  const colorClasses = {
-    blue: { bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200", activeBg: "bg-blue-600" },
-    emerald: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200", activeBg: "bg-emerald-600" },
-    violet: { bg: "bg-violet-50", text: "text-violet-600", border: "border-violet-200", activeBg: "bg-violet-600" },
-    orange: { bg: "bg-orange-50", text: "text-orange-600", border: "border-orange-200", activeBg: "bg-orange-600" },
+  const colorClasses: Record<string, { bg: string; text: string; light: string; border: string }> = {
+    blue: { bg: "bg-blue-100", text: "text-blue-600", light: "bg-blue-50", border: "border-blue-200" },
+    emerald: { bg: "bg-emerald-100", text: "text-emerald-600", light: "bg-emerald-50", border: "border-emerald-200" },
+    violet: { bg: "bg-violet-100", text: "text-violet-600", light: "bg-violet-50", border: "border-violet-200" },
+    orange: { bg: "bg-orange-100", text: "text-orange-600", light: "bg-orange-50", border: "border-orange-200" },
+    cyan: { bg: "bg-cyan-100", text: "text-cyan-600", light: "bg-cyan-50", border: "border-cyan-200" },
+    rose: { bg: "bg-rose-100", text: "text-rose-600", light: "bg-rose-50", border: "border-rose-200" },
   };
 
   return (
-    <section ref={sectionRef} className="py-16 lg:py-24 bg-slate-50">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 lg:mb-16"
-        >
-          <span className="inline-block px-4 py-2 rounded-full bg-emerald-50 text-emerald-600 text-sm font-medium mb-4">
-            Как это происходит
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
-            Простой и понятный <span className="text-blue-600">процесс</span>
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Никакой бюрократии и непонятных терминов. 
-            Вы всегда знаете, что происходит с проектом.
-          </p>
-        </motion.div>
+    <>
+      <section ref={sectionRef} className="py-16 lg:py-24 bg-slate-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 grid-pattern opacity-50" />
 
-        {/* Steps with Timeline */}
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
-          {/* Left side - Timeline */}
-          <div className="relative">
-            {/* Vertical line */}
-            <div className="absolute left-6 lg:left-8 top-0 bottom-0 w-0.5 bg-slate-200" />
+        <div className="relative max-w-[1280px] mx-auto px-6 lg:px-8">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12 lg:mb-16"
+          >
+            <span className="inline-block px-4 py-2 rounded-full bg-orange-100 text-orange-700 text-sm font-medium mb-4">
+              Процесс работы
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
+              Как мы <span className="text-blue-600">работаем</span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Простой и понятный процесс без бюрократии. 
+              Вы всегда знаете, что происходит с проектом.
+            </p>
+          </motion.div>
 
-            <div className="space-y-4">
-              {steps.map((step, index) => {
-                const colors = colorClasses[step.color as keyof typeof colorClasses];
-                const isActive = activeStep === index;
-                
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    onClick={() => setActiveStep(index)}
-                    className={`relative pl-16 lg:pl-20 py-5 lg:py-6 pr-5 lg:pr-6 rounded-2xl cursor-pointer transition-all duration-200 ${
-                      isActive
-                        ? `bg-white border-2 ${colors.border} shadow-sm`
-                        : "bg-transparent border-2 border-transparent hover:bg-white/50"
-                    }`}
-                  >
-                    {/* Number circle */}
-                    <div 
-                      className={`absolute left-0 w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-200 ${
-                        isActive 
-                          ? `${colors.activeBg} text-white shadow-lg` 
-                          : "bg-white border-2 border-slate-200 text-slate-400"
-                      }`}
+          {/* Desktop Timeline */}
+          <div className="hidden lg:block">
+            <div className="relative">
+              {/* Timeline line */}
+              <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-200 -translate-y-1/2 rounded-full" />
+              <motion.div 
+                initial={{ scaleX: 0 }}
+                animate={isInView ? { scaleX: 1 } : {}}
+                transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-rose-500 -translate-y-1/2 rounded-full origin-left"
+              />
+
+              {/* Steps */}
+              <div className="grid grid-cols-6 gap-4">
+                {steps.map((step, index) => {
+                  const colors = colorClasses[step.color];
+                  const isActive = activeStep === index;
+                  
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+                      onMouseEnter={() => setActiveStep(index)}
+                      onMouseLeave={() => setActiveStep(null)}
+                      className="relative pt-8"
                     >
-                      {isActive ? step.icon : step.number}
-                    </div>
-                    
-                    <div>
-                      <h3 className={`text-lg font-bold mb-2 transition-colors ${isActive ? colors.text : "text-slate-900"}`}>
-                        {step.title}
-                      </h3>
-                      
-                      <p className="text-slate-600 text-sm leading-relaxed">
-                        {step.description}
-                      </p>
-                      
-                      {/* Expanded content */}
-                      {isActive && (
+                      {/* Step number circle */}
+                      <motion.div 
+                        animate={isActive ? { scale: 1.2 } : { scale: 1 }}
+                        className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold text-lg shadow-lg z-10 transition-all duration-300 ${isActive ? 'ring-4 ring-white' : ''}`}
+                      >
+                        {step.num}
+                      </motion.div>
+
+                      {/* Card */}
+                      <div className={`p-5 rounded-2xl transition-all duration-300 ${isActive ? `bg-white shadow-xl border ${colors.border}` : 'bg-white/70 border border-transparent'}`}>
+                        <div className={`w-10 h-10 rounded-xl ${colors.light} ${colors.text} flex items-center justify-center mb-3`}>
+                          {step.icon}
+                        </div>
+                        <h3 className="font-bold text-slate-900 mb-1">{step.title}</h3>
+                        <p className="text-xs text-slate-400 mb-2">{step.subtitle}</p>
+                        
                         <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="mt-4 pt-4 border-t border-slate-100"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={isActive ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+                          className="overflow-hidden"
                         >
-                          <div className="flex flex-wrap items-center gap-4 text-sm">
-                            <div className="flex items-center gap-2">
-                              <svg className={`w-4 h-4 ${colors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              <span className="text-slate-600">{step.whatYouGet}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              <span className="text-slate-400">{step.duration}</span>
-                            </div>
+                          <p className="text-sm text-slate-600 mb-3">{step.description}</p>
+                          <div className={`text-xs ${colors.text} font-medium px-2 py-1 ${colors.light} rounded-md inline-block`}>
+                            → {step.result}
                           </div>
                         </motion.div>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              })}
+
+                        {!isActive && (
+                          <p className="text-xs text-slate-400 mt-1">{step.duration}</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Right side - Info cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="lg:sticky lg:top-32 space-y-5"
-          >
-            {/* Timeline visual */}
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Примерные сроки
-              </h3>
-              <div className="space-y-3">
-                {[
-                  { label: "Лендинг / сайт-визитка", time: "3-6 недель" },
-                  { label: "Интернет-магазин", time: "2-3 месяца" },
-                  { label: "CRM / личный кабинет", time: "3-4 месяца" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <span className="text-slate-600 text-sm">{item.label}</span>
-                    <span className="text-blue-600 text-sm font-medium">{item.time}</span>
+          {/* Mobile Timeline */}
+          <div className="lg:hidden space-y-4">
+            {steps.map((step, index) => {
+              const colors = colorClasses[step.color];
+              
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+                  className="flex gap-4"
+                >
+                  {/* Number & Line */}
+                  <div className="flex flex-col items-center">
+                    <div className={`w-10 h-10 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center font-bold text-sm flex-shrink-0`}>
+                      {step.num}
+                    </div>
+                    {index < steps.length - 1 && (
+                      <div className="w-0.5 flex-1 bg-slate-200 my-2" />
+                    )}
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {/* What's important */}
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
-              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Что важно знать
-              </h3>
-              <ul className="space-y-3">
-                {[
-                  "Цена фиксируется в договоре до начала работ",
-                  "Показываем промежуточные результаты каждую неделю",
-                  "Можно вносить изменения в процессе работы",
-                  "Не берём больше 30% предоплаты",
-                ].map((text, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-slate-600">{text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                  {/* Content */}
+                  <div className="pb-6 flex-1">
+                    <div className="p-4 rounded-xl bg-white border border-slate-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-bold text-slate-900">{step.title}</h3>
+                        <span className="text-xs text-slate-400">{step.duration}</span>
+                      </div>
+                      <p className="text-sm text-slate-400 mb-2">{step.subtitle}</p>
+                      <p className="text-sm text-slate-600 mb-3">{step.description}</p>
+                      <div className={`text-xs ${colors.text} font-medium px-2 py-1 ${colors.light} rounded-md inline-block`}>
+                        → {step.result}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
 
-            {/* CTA */}
-            <div className="p-6 rounded-2xl bg-blue-50 border border-blue-100">
-              <p className="text-slate-700 mb-4">
-                Готовы обсудить вашу задачу?
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all text-sm shadow-sm"
-                data-cta="how-we-work-cta"
-              >
-                Рассказать о проекте
-                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-12 text-center"
+          >
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-600/20"
+              data-cta="how-we-work-start"
+            >
+              Начать с первого шага
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </button>
+            <p className="text-slate-400 text-sm mt-3">Бесплатная консультация • Ответ за 2 часа</p>
           </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <ConsultationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
   );
 }
