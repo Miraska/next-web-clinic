@@ -15,7 +15,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Здравствуйте! 👋 Чем могу помочь? Можете задать вопрос или оставить заявку.",
+      text: "Здравствуйте! Чем могу помочь? Можете задать вопрос или оставить заявку.",
       sender: "bot",
       timestamp: new Date(),
     },
@@ -46,9 +46,9 @@ export default function ChatWidget() {
   const botResponses: { [key: string]: string } = {
     привет: "Привет! Чем могу помочь?",
     здравствуйте: "Здравствуйте! Расскажите, что вас интересует?",
-    стоимость: "Стоимость проекта зависит от сложности и объема работ. Обычно от 150 000 ₽. Хотите получить точную оценку? Оставьте заявку, и мы свяжемся с вами!",
-    цена: "Стоимость проекта зависит от сложности и объема работ. Обычно от 150 000 ₽. Хотите получить точную оценку? Оставьте заявку, и мы свяжемся с вами!",
-    сколько: "Стоимость проекта зависит от сложности и объема работ. Обычно от 150 000 ₽. Хотите получить точную оценку? Оставьте заявку, и мы свяжемся с вами!",
+    стоимость: "Стоимость проекта зависит от сложности и объема работ. Обычно от 50 000 ₽ для лендингов и от 150 000 ₽ для CRM-систем. Хотите получить точную оценку? Оставьте заявку, и мы свяжемся с вами!",
+    цена: "Стоимость проекта зависит от сложности и объема работ. Обычно от 50 000 ₽ для лендингов и от 150 000 ₽ для CRM-систем. Хотите получить точную оценку? Оставьте заявку, и мы свяжемся с вами!",
+    сколько: "Стоимость проекта зависит от сложности и объема работ. Обычно от 50 000 ₽ для лендингов и от 150 000 ₽ для CRM-систем. Хотите получить точную оценку? Оставьте заявку, и мы свяжемся с вами!",
     услуги: "Мы предоставляем следующие услуги:\n• Веб-разработка\n• CRM/ERP системы\n• Автоматизация бизнеса\n• API и интеграции\n• Поддержка и развитие\n\nПодробнее на странице /services",
     что: "Мы предоставляем следующие услуги:\n• Веб-разработка\n• CRM/ERP системы\n• Автоматизация бизнеса\n• API и интеграции\n• Поддержка и развитие\n\nПодробнее на странице /services",
     кейсы: "У нас более 50 успешных проектов! Посмотрите примеры на странице /projects. Там вы найдете кейсы по CRM системам, интернет-магазинам и автоматизации.",
@@ -125,7 +125,7 @@ export default function ChatWidget() {
         animate={{ scale: 1 }}
         transition={{ type: "spring", delay: 0.5 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-[#00ff88] to-[#00d4ff] shadow-[0_0_30px_rgba(0,255,136,0.4)] flex items-center justify-center group hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-blue-600 shadow-lg flex items-center justify-center group hover:bg-blue-700 hover:scale-105 transition-all"
         aria-label="Открыть чат"
       >
         <AnimatePresence mode="wait">
@@ -135,7 +135,7 @@ export default function ChatWidget() {
               initial={{ opacity: 0, rotate: -180 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: 180 }}
-              className="w-6 h-6 text-[#0a0e17]"
+              className="w-6 h-6 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -153,7 +153,7 @@ export default function ChatWidget() {
               initial={{ opacity: 0, rotate: 180 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: -180 }}
-              className="w-6 h-6 text-[#0a0e17]"
+              className="w-6 h-6 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -167,7 +167,7 @@ export default function ChatWidget() {
             </motion.svg>
           )}
         </AnimatePresence>
-        <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-[#0a0e17] animate-pulse" />
+        <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
       </motion.button>
 
       {/* Chat Window */}
@@ -180,7 +180,7 @@ export default function ChatWidget() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-40"
             />
 
             {/* Chat Panel */}
@@ -189,25 +189,25 @@ export default function ChatWidget() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               transition={{ type: "spring", damping: 25 }}
-              className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[500px] rounded-2xl bg-[#0f1520] border border-[#1f2937] shadow-2xl overflow-hidden flex flex-col"
+              className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[500px] rounded-2xl bg-white border border-slate-200 shadow-2xl overflow-hidden flex flex-col"
             >
               {/* Header */}
-              <div className="p-4 bg-gradient-to-r from-[#00ff88]/10 to-[#00d4ff]/10 border-b border-[#1f2937] flex items-center justify-between">
+              <div className="p-4 bg-blue-600 border-b border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00ff88] to-[#00d4ff] flex items-center justify-center">
-                    <span className="text-[#0a0e17] font-bold text-sm">WC</span>
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                    <span className="text-blue-600 font-bold text-sm">WC</span>
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold">WebClinic Support</h3>
-                    <p className="text-white/60 text-xs">Обычно отвечаем в течение 2-4 часов</p>
+                    <h3 className="text-white font-semibold">WebClinic</h3>
+                    <p className="text-white/70 text-xs">Обычно отвечаем в течение 2-4 часов</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
                 >
                   <svg
-                    className="w-4 h-4 text-white/60"
+                    className="w-4 h-4 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -223,7 +223,7 @@ export default function ChatWidget() {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 p-4 overflow-y-auto space-y-4">
+              <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50">
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -236,13 +236,13 @@ export default function ChatWidget() {
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                         message.sender === "bot"
-                          ? "bg-gradient-to-r from-[#00ff88] to-[#00d4ff]"
-                          : "bg-[#1f2937]"
+                          ? "bg-blue-600"
+                          : "bg-slate-200"
                       }`}
                     >
                       <span
                         className={`font-bold text-xs ${
-                          message.sender === "bot" ? "text-[#0a0e17]" : "text-white"
+                          message.sender === "bot" ? "text-white" : "text-slate-600"
                         }`}
                       >
                         {message.sender === "bot" ? "WC" : "Вы"}
@@ -252,13 +252,15 @@ export default function ChatWidget() {
                       <div
                         className={`rounded-xl p-3 ${
                           message.sender === "bot"
-                            ? "bg-[#0a0e17] border border-[#1f2937]"
-                            : "bg-gradient-to-r from-[#00ff88]/20 to-[#00d4ff]/20 border border-[#00ff88]/30"
+                            ? "bg-white border border-slate-200"
+                            : "bg-blue-600 text-white"
                         }`}
                       >
-                        <p className="text-white text-sm whitespace-pre-line">{message.text}</p>
+                        <p className={`text-sm whitespace-pre-line ${
+                          message.sender === "bot" ? "text-slate-700" : "text-white"
+                        }`}>{message.text}</p>
                       </div>
-                      <p className="text-white/40 text-xs mt-1">
+                      <p className="text-slate-400 text-xs mt-1">
                         {message.timestamp.toLocaleTimeString("ru-RU", {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -275,15 +277,15 @@ export default function ChatWidget() {
                     animate={{ opacity: 1 }}
                     className="flex items-start gap-3"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ff88] to-[#00d4ff] flex items-center justify-center flex-shrink-0">
-                      <span className="text-[#0a0e17] font-bold text-xs">WC</span>
+                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-xs">WC</span>
                     </div>
                     <div className="flex-1">
-                      <div className="bg-[#0a0e17] rounded-xl p-3 border border-[#1f2937] w-20">
+                      <div className="bg-white rounded-xl p-3 border border-slate-200 w-20">
                         <div className="flex gap-1">
-                          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                         </div>
                       </div>
                     </div>
@@ -295,7 +297,7 @@ export default function ChatWidget() {
                 {/* Quick Actions - only show if no messages from user yet */}
                 {messages.length === 1 && (
                   <div className="space-y-2">
-                    <p className="text-white/50 text-xs px-1">Быстрые действия:</p>
+                    <p className="text-slate-500 text-xs px-1">Быстрые действия:</p>
                     <div className="grid grid-cols-2 gap-2">
                       {[
                         "Обсудить проект",
@@ -306,7 +308,7 @@ export default function ChatWidget() {
                         <button
                           key={index}
                           onClick={() => handleQuickAction(action)}
-                          className="px-3 py-2 rounded-lg bg-[#0a0e17] border border-[#1f2937] text-white/80 text-xs hover:border-[#00ff88]/30 hover:text-white transition-all text-left"
+                          className="px-3 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs hover:border-blue-300 hover:text-blue-600 transition-all text-left"
                         >
                           {action}
                         </button>
@@ -317,7 +319,7 @@ export default function ChatWidget() {
               </div>
 
               {/* Input Area */}
-              <div className="p-4 border-t border-[#1f2937] bg-[#0a0e17]">
+              <div className="p-4 border-t border-slate-200 bg-white">
                 <form onSubmit={handleSubmit} className="flex gap-2">
                   <input
                     ref={inputRef}
@@ -325,14 +327,13 @@ export default function ChatWidget() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Напишите сообщение..."
-                    className="flex-1 px-4 py-2 rounded-lg bg-[#0f1520] border border-[#1f2937] text-white placeholder-white/30 focus:border-[#1f2937] focus:outline-none focus:ring-0 focus-visible:outline-none text-sm"
-                    style={{ outline: 'none', boxShadow: 'none' }}
+                    className="flex-1 px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-sm"
                     disabled={isTyping}
                   />
                   <button
                     type="submit"
                     disabled={!inputValue.trim() || isTyping}
-                    className="px-4 py-2 bg-gradient-to-r from-[#00ff88] to-[#00d4ff] text-[#0a0e17] rounded-lg font-semibold text-sm hover:shadow-[0_0_20px_rgba(0,255,136,0.4)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <svg
                       className="w-4 h-4"
@@ -350,11 +351,11 @@ export default function ChatWidget() {
                   </button>
                 </form>
                 <div className="flex items-center justify-between mt-2">
-                  <p className="text-white/40 text-xs">
+                  <p className="text-slate-400 text-xs">
                     Или{" "}
                     <a
                       href="mailto:hello@webclinic.dev"
-                      className="text-[#00ff88] hover:underline"
+                      className="text-blue-600 hover:underline"
                     >
                       hello@webclinic.dev
                     </a>
@@ -363,7 +364,7 @@ export default function ChatWidget() {
                     href="https://t.me/webclinic"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/40 hover:text-[#00ff88] transition-colors text-xs flex items-center gap-1"
+                    className="text-slate-400 hover:text-blue-600 transition-colors text-xs flex items-center gap-1"
                   >
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.308-.346-.11l-6.4 4.02-2.76-.918c-.6-.187-.612-.6.125-.89l10.782-4.156c.5-.18.94.12.78.878z" />

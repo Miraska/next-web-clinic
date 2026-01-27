@@ -1,306 +1,219 @@
 "use client";
 import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import Link from "next/link";
 
-// Animated counter hook
-function useAnimatedCounter(end: number, duration: number = 2000, start: number = 0) {
-  const [count, setCount] = useState(start);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const startAnimation = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    
-    const startTime = Date.now();
-    const animate = () => {
-      const now = Date.now();
-      const progress = Math.min((now - startTime) / duration, 1);
-      
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      const currentCount = Math.floor(start + (end - start) * easeOutQuart);
-      
-      setCount(currentCount);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    requestAnimationFrame(animate);
-  };
-
-  return { count, startAnimation };
-}
-
-const stats = [
+const honestFacts = [
   {
-    value: 50,
-    suffix: "+",
-    label: "Проектов",
-    description: "Успешно реализованных проектов разной сложности",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
-    ),
-    color: "#00ff88",
-  },
-  {
-    value: 5,
-    suffix: "+",
-    label: "Лет опыта",
-    description: "Профессионального опыта в веб-разработке",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    color: "#00d4ff",
-  },
-  {
-    value: 30,
-    suffix: "+",
-    label: "Клиентов",
-    description: "Доверяют нам развитие своего бизнеса",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
     ),
-    color: "#8b5cf6",
+    title: "Небольшая команда",
+    description: "Работаете напрямую с разработчиками, а не через менеджеров",
+    color: "blue",
   },
   {
-    value: 98,
-    suffix: "%",
-    label: "Довольны",
-    description: "Клиентов довольны результатом работы",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
-    color: "#ec4899",
+    title: "Личная ответственность",
+    description: "За каждый проект отвечает конкретный человек",
+    color: "emerald",
+  },
+  {
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    title: "Быстрая связь",
+    description: "Отвечаем в течение 2-4 часов в рабочее время",
+    color: "violet",
+  },
+  {
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+    ),
+    title: "Всё прозрачно",
+    description: "Покажем код, объясним что делаем и почему",
+    color: "orange",
   },
 ];
 
 const advantages = [
   {
-    title: "Прозрачные процессы",
-    description: "Регулярные отчёты, доступ к задачам в трекере, видимость прогресса на каждом этапе разработки.",
+    title: "Объясняем простыми словами",
+    description: "Не нужно разбираться в технических терминах. Расскажем что делаем так, чтобы было понятно.",
     icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
       </svg>
     ),
   },
   {
-    title: "Фиксированные сроки",
-    description: "Чёткие дедлайны, соблюдение договорённостей. Если задерживаемся — предупреждаем заранее.",
+    title: "Фиксированная цена",
+    description: "Называем стоимость до начала работ. Никаких неожиданных счетов в процессе.",
     icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
   },
   {
-    title: "Современный стек",
-    description: "React, Next.js, TypeScript, Node.js — используем только проверенные и актуальные технологии.",
+    title: "Помогаем после запуска",
+    description: "Проект не заканчивается релизом. Поддержим, поможем с обновлениями и развитием.",
     icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
-  },
-  {
-    title: "Поддержка после запуска",
-    description: "Не бросаем проект после релиза. Помогаем с развитием, исправляем баги, добавляем новый функционал.",
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     ),
   },
   {
-    title: "Индивидуальный подход",
-    description: "Нет шаблонных решений. Каждый проект адаптируем под специфику вашего бизнеса.",
+    title: "Работаем по договору",
+    description: "Официально, с документами. Все обязательства прописаны, всё прозрачно.",
     icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
     ),
   },
   {
-    title: "Гарантия качества",
-    description: "Код-ревью, автотесты, тестирование перед релизом. Минимум багов после запуска.",
+    title: "Код остаётся у вас",
+    description: "Передаём все исходники и доступы. Вы не привязаны к нам навсегда.",
     icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+      </svg>
+    ),
+  },
+  {
+    title: "Показываем прогресс",
+    description: "Регулярные демонстрации и отчёты. Вы всегда знаете, на каком этапе проект.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
     ),
   },
 ];
 
-function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { count, startAnimation } = useAnimatedCounter(stat.value);
-
-  useEffect(() => {
-    if (isInView) {
-      startAnimation();
-    }
-  }, [isInView]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="relative group"
-    >
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-        style={{ background: `linear-gradient(135deg, ${stat.color}20, transparent)` }}
-      />
-      
-      <div className="relative p-6 lg:p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-500 card-hover">
-        {/* Icon */}
-        <div 
-          className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300"
-          style={{ backgroundColor: `${stat.color}20`, color: stat.color }}
-        >
-          {stat.icon}
-        </div>
-
-        {/* Counter */}
-        <div className="mb-2">
-          <span 
-            className="text-4xl lg:text-5xl font-bold"
-            style={{ color: stat.color }}
-          >
-            {count}
-          </span>
-          <span className="text-4xl lg:text-5xl font-bold text-white">
-            {stat.suffix}
-          </span>
-        </div>
-
-        {/* Label */}
-        <div className="text-lg font-semibold text-white mb-2">
-          {stat.label}
-        </div>
-
-        {/* Description */}
-        <p className="text-sm text-white/50">
-          {stat.description}
-        </p>
-
-        {/* Progress bar animation */}
-        <div className="mt-4 h-1 bg-[#1f2937] rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={isInView ? { width: `${stat.value}%` } : {}}
-            transition={{ duration: 2, ease: "easeOut", delay: index * 0.1 }}
-            className="h-full rounded-full"
-            style={{ backgroundColor: stat.color, maxWidth: '100%' }}
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function HomeWhyUsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
+  const colorClasses = {
+    blue: { bg: "bg-blue-50", text: "text-blue-600" },
+    emerald: { bg: "bg-emerald-50", text: "text-emerald-600" },
+    violet: { bg: "bg-violet-50", text: "text-violet-600" },
+    orange: { bg: "bg-orange-50", text: "text-orange-600" },
+  };
+
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-[#0a0e17] relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 grid-pattern opacity-40" />
-      <div className="orb orb-cyan w-[500px] h-[500px] -top-48 -left-48 opacity-20 animate-float" />
-      <div className="orb orb-purple w-[400px] h-[400px] bottom-0 -right-48 opacity-15 animate-float-delayed" />
-      
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
+    <section ref={sectionRef} className="py-16 lg:py-24 bg-slate-50">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16 lg:mb-20"
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12 lg:mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-2 rounded-full bg-[#00d4ff]/10 text-[#00d4ff] text-sm font-medium mb-6"
-          >
-            Почему мы
-          </motion.span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.1] mb-6">
-            Цифры говорят за <span className="gradient-text">нас</span>
+          <span className="inline-block px-4 py-2 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+            Почему выбирают нас
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
+            Честно о том, <span className="text-blue-600">как мы работаем</span>
           </h2>
-          <p className="text-lg lg:text-xl text-white/60 font-light leading-relaxed max-w-3xl mx-auto">
-            Мы не просто пишем код — мы решаем бизнес-задачи. 
-            Каждый проект — это результат глубокого погружения в специфику клиента.
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Мы небольшая команда, и это наше преимущество. 
+            С вами работают живые люди, а не безликий конвейер.
           </p>
         </motion.div>
 
-        {/* Stats Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-20 lg:mb-24">
-          {stats.map((stat, index) => (
-            <StatCard key={index} stat={stat} index={index} />
-          ))}
+        {/* Honest facts */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12 lg:mb-16">
+          {honestFacts.map((fact, index) => {
+            const colors = colorClasses[fact.color as keyof typeof colorClasses];
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-md transition-all duration-200"
+              >
+                <div className={`w-12 h-12 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center mb-4`}>
+                  {fact.icon}
+                </div>
+                <div className="text-lg font-semibold text-slate-900 mb-2">{fact.title}</div>
+                <p className="text-sm text-slate-500">{fact.description}</p>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Advantages Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-12"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="text-center mb-10"
         >
-          <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">
-            Наши <span className="text-[#00ff88]">преимущества</span>
+          <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">
+            Что вы <span className="text-emerald-600">получите</span>
           </h3>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            Что отличает нас от других студий и фрилансеров
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Без маркетингового пафоса — только то, что действительно важно
           </p>
         </motion.div>
 
         {/* Advantages Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
           {advantages.map((advantage, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-              className="group relative p-6 lg:p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-500 card-hover"
+              transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+              className="p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-md hover:border-slate-300 transition-all duration-200"
             >
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00ff88]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div className="relative">
-                {/* Icon */}
-                <div className="w-14 h-14 rounded-xl bg-[#00ff88]/10 text-[#00ff88] flex items-center justify-center mb-4 group-hover:bg-[#00ff88]/20 group-hover:scale-110 transition-all duration-300">
-                  {advantage.icon}
-                </div>
-
-                {/* Title */}
-                <h4 className="text-xl font-bold text-white mb-3 group-hover:text-[#00ff88] transition-colors duration-300">
-                  {advantage.title}
-                </h4>
-
-                {/* Description */}
-                <p className="text-white/60 leading-relaxed">
-                  {advantage.description}
-                </p>
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+                {advantage.icon}
               </div>
+              <h4 className="text-lg font-bold text-slate-900 mb-2">
+                {advantage.title}
+              </h4>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                {advantage.description}
+              </p>
             </motion.div>
           ))}
         </div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="text-center mt-12"
+        >
+          <p className="text-slate-500 mb-4">Хотите узнать больше о нашем подходе?</p>
+          <Link
+            href="/about"
+            className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors"
+          >
+            Подробнее о нас
+            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

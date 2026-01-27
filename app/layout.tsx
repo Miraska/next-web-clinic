@@ -1,6 +1,8 @@
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import ChatWidget from "@/components/ui/ChatWidget";
+import BackToTop from "@/components/ui/BackToTop";
+import Analytics from "@/components/ui/Analytics";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
@@ -12,11 +14,11 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: {
-    default: "WebClinic — Разработка веб-систем и автоматизация",
+    default: "WebClinic — Веб-разработка для бизнеса",
     template: "%s | WebClinic",
   },
   description:
-    "Инженерная команда для разработки веб-приложений, CRM/ERP систем и enterprise-решений. Проектирование архитектуры, разработка, поддержка.",
+    "Делаем сайты и веб-сервисы, которые реально помогают бизнесу. Лендинги, интернет-магазины, CRM-системы. Понятно, в срок и без сюрпризов.",
   authors: [{ name: "WebClinic" }],
   creator: "WebClinic",
   publisher: "WebClinic",
@@ -33,16 +35,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ru_RU",
     url: "https://webclinic.dev",
-    title: "WebClinic — Разработка веб-систем и автоматизация",
+    title: "WebClinic — Веб-разработка для бизнеса",
     description:
-      "Инженерная команда для разработки веб-приложений, CRM/ERP систем и enterprise-решений.",
+      "Делаем сайты и веб-сервисы, которые реально помогают бизнесу. Понятно, в срок и без сюрпризов.",
     siteName: "WebClinic",
   },
   twitter: {
     card: "summary_large_image",
-    title: "WebClinic — Разработка веб-систем",
+    title: "WebClinic — Веб-разработка для бизнеса",
     description:
-      "Инженерная команда для разработки веб-приложений, CRM/ERP систем и enterprise-решений.",
+      "Делаем сайты и веб-сервисы, которые реально помогают бизнесу.",
   },
   robots: {
     index: true,
@@ -58,10 +60,12 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${geistSans.className} antialiased`}>
+        <Analytics />
         <Header />
         {children}
         <Footer />
         <ChatWidget />
+        <BackToTop />
       </body>
     </html>
   );

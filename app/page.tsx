@@ -1,36 +1,67 @@
 import HomeFAQSection from "@/components/home/HomeFAQSection";
 import HomeHeroSection from "@/components/home/HomeHeroSection";
 import HomeHowWeWorkSection from "@/components/home/HomeHowWeWorkSection";
-import HomeTechnologiesSection from "@/components/home/HomeTechnologiesSection";
 import HomeTestimonialsSection from "@/components/home/HomeTestimonialsSection";
 import HomeWhatWeDoSection from "@/components/home/HomeWhatWeDoSection";
 import HomeWhyUsSection from "@/components/home/HomeWhyUsSection";
 import HomeProjectsPreviewSection from "@/components/home/HomeProjectsPreviewSection";
+import HomeForWhomSection from "@/components/home/HomeForWhomSection";
+import HomeStatsSection from "@/components/home/HomeStatsSection";
+import HomeClientsSection from "@/components/home/HomeClientsSection";
+import HomePricingSection from "@/components/home/HomePricingSection";
+import HomeFinalCTASection from "@/components/home/HomeFinalCTASection";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Разработка веб-систем и автоматизация бизнеса",
+  title: "Веб-разработка для бизнеса — сайты, интернет-магазины, CRM",
   description:
-    "Создаём надёжные веб-системы, CRM/ERP решения и автоматизируем бизнес-процессы. Полный цикл разработки под ключ для малого и среднего бизнеса.",
+    "Делаем сайты и веб-сервисы, которые реально помогают бизнесу. Понятно, в срок и без сюрпризов. Бесплатная консультация.",
   openGraph: {
-    title: "WebClinic Solutions — Разработка веб-систем и автоматизация бизнеса",
+    title: "WebClinic — Веб-разработка для бизнеса",
     description:
-      "Создаём надёжные веб-системы, CRM/ERP решения и автоматизируем бизнес-процессы. Полный цикл разработки под ключ.",
-    url: "https://WebClinic-solutions.dev",
+      "Делаем сайты и веб-сервисы, которые реально помогают бизнесу. Понятно, в срок и без сюрпризов.",
+    url: "https://webclinic.dev",
   },
 };
 
 export default function Home() {
   return (
     <main>
+      {/* Hero с партиклами и параллаксом */}
       <HomeHeroSection />
+      
+      {/* Статистика с анимированными счетчиками */}
+      <HomeStatsSection />
+      
+      {/* Что мы делаем - проблемы и решения */}
       <HomeWhatWeDoSection />
+      
+      {/* Кому подходим / не подходим */}
+      <HomeForWhomSection />
+      
+      {/* Сферы с которыми работаем */}
+      <HomeClientsSection />
+      
+      {/* Тарифы и цены */}
+      <HomePricingSection />
+      
+      {/* Почему мы */}
       <HomeWhyUsSection />
-      <HomeProjectsPreviewSection />
+      
+      {/* Как мы работаем */}
       <HomeHowWeWorkSection />
-      <HomeTechnologiesSection />
+      
+      {/* Примеры проектов */}
+      <HomeProjectsPreviewSection />
+      
+      {/* Гарантии и доверие */}
       <HomeTestimonialsSection />
+      
+      {/* FAQ */}
       <HomeFAQSection />
+      
+      {/* Финальный CTA */}
+      <HomeFinalCTASection />
     </main>
   );
 }

@@ -1,10 +1,11 @@
 "use client";
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import Link from "next/link";
 
 export default function ContactComponent() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,25 +16,6 @@ export default function ContactComponent() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,10 +50,10 @@ export default function ContactComponent() {
 
   const budgetOptions = [
     { value: "", label: "Выберите бюджет" },
-    { value: "150-300k", label: "150 000 – 300 000 ₽" },
+    { value: "50-100k", label: "50 000 – 100 000 ₽" },
+    { value: "100-300k", label: "100 000 – 300 000 ₽" },
     { value: "300-500k", label: "300 000 – 500 000 ₽" },
-    { value: "500k-1m", label: "500 000 – 1 000 000 ₽" },
-    { value: "1m+", label: "Более 1 000 000 ₽" },
+    { value: "500k+", label: "Более 500 000 ₽" },
     { value: "unknown", label: "Затрудняюсь оценить" },
   ];
 
@@ -108,50 +90,54 @@ export default function ContactComponent() {
     },
   ];
 
-  return (
-    <section ref={sectionRef} className="pt-32 pb-24 lg:pb-32 bg-[#0a0e17] min-h-screen relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 grid-pattern-animated opacity-20" />
-      <div className="orb orb-green w-[600px] h-[600px] -top-64 -right-64 opacity-20" />
-      <div className="orb orb-cyan w-[400px] h-[400px] bottom-0 -left-48 opacity-15" />
-      <div className="orb orb-purple w-[300px] h-[300px] top-1/2 right-0 opacity-10" />
+  const faqItems = [
+    {
+      q: "Сколько стоит консультация?",
+      a: "Первая консультация и оценка проекта бесплатны."
+    },
+    {
+      q: "Как быстро вы отвечаете?",
+      a: "Обычно в течение 2-4 часов в рабочее время."
+    },
+    {
+      q: "Можно ли созвониться?",
+      a: "Да, позвоните по телефону или напишите в Telegram."
+    },
+  ];
 
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
+  return (
+    <section ref={sectionRef} className="pt-28 lg:pt-32 pb-16 lg:pb-24 bg-white min-h-screen">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16 lg:mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12 lg:mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-2 rounded-full bg-[#00ff88]/10 text-[#00ff88] text-sm font-medium mb-6"
-          >
+          <span className="inline-block px-4 py-2 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
             Контакты
-          </motion.span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] mb-6">
-            Обсудим <span className="text-[#00ff88] text-glow-green">проект</span>
+          </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
+            Обсудим <span className="text-blue-600">проект</span>
           </h1>
-          <p className="text-lg lg:text-xl text-white/60 font-light leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Расскажите о вашей задаче — мы свяжемся в течение рабочего дня.
             Консультация и оценка проекта бесплатны.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-7"
           >
-            <div className="p-8 lg:p-10 rounded-2xl bg-[#0f1520] border border-[#1f2937] gradient-border">
-              <h2 className="text-xl lg:text-2xl font-bold text-white mb-8 flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#00ff88] animate-pulse" />
+            <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 Оставить заявку
               </h2>
 
@@ -161,20 +147,20 @@ export default function ContactComponent() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="text-center py-12"
                 >
-                  <div className="w-20 h-20 rounded-full bg-[#00ff88]/20 flex items-center justify-center mx-auto mb-6 glow-green">
-                    <svg className="w-10 h-10 text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Заявка отправлена!</h3>
-                  <p className="text-white/60">Мы свяжемся с вами в ближайшее время.</p>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Заявка отправлена!</h3>
+                  <p className="text-slate-600">Мы свяжемся с вами в ближайшее время.</p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="group">
-                      <label className="block text-sm font-medium text-white/80 mb-2">
-                        Имя *
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Имя <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -182,13 +168,13 @@ export default function ContactComponent() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl bg-[#0a0e17] border border-[#1f2937] text-white placeholder-white/30 focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] transition-all duration-300"
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                         placeholder="Как к вам обращаться?"
                       />
                     </div>
-                    <div className="group">
-                      <label className="block text-sm font-medium text-white/80 mb-2">
-                        Email *
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Email <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="email"
@@ -196,15 +182,15 @@ export default function ContactComponent() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl bg-[#0a0e17] border border-[#1f2937] text-white placeholder-white/30 focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] transition-all duration-300"
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                         placeholder="email@company.ru"
                       />
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid md:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-sm font-medium text-white/80 mb-2">
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
                         Телефон
                       </label>
                       <input
@@ -212,12 +198,12 @@ export default function ContactComponent() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-[#0a0e17] border border-[#1f2937] text-white placeholder-white/30 focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] transition-all duration-300"
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                         placeholder="+7 (___) ___-__-__"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-white/80 mb-2">
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
                         Компания
                       </label>
                       <input
@@ -225,21 +211,21 @@ export default function ContactComponent() {
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-[#0a0e17] border border-[#1f2937] text-white placeholder-white/30 focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] transition-all duration-300"
+                        className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                         placeholder="Название компании"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/80 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Примерный бюджет
                     </label>
                     <select
                       name="budget"
                       value={formData.budget}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0a0e17] border border-[#1f2937] text-white focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] transition-all duration-300"
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                     >
                       {budgetOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -250,8 +236,8 @@ export default function ContactComponent() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white/80 mb-2">
-                      Опишите задачу *
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Опишите задачу <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       name="message"
@@ -259,7 +245,7 @@ export default function ContactComponent() {
                       onChange={handleChange}
                       required
                       rows={5}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0a0e17] border border-[#1f2937] text-white placeholder-white/30 focus:outline-none focus:border-[#00ff88] focus:shadow-[0_0_20px_rgba(0,255,136,0.2)] transition-all duration-300 resize-none"
+                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
                       placeholder="Расскажите, что хотите сделать. Чем подробнее — тем точнее оценим."
                     />
                   </div>
@@ -267,7 +253,8 @@ export default function ContactComponent() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 px-8 bg-[#00ff88] text-[#0a0e17] font-semibold rounded-xl hover:bg-[#00cc6a] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group hover:shadow-[0_0_30px_rgba(0,255,136,0.4)]"
+                    className="w-full py-4 px-8 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-sm"
+                    data-cta="contact-form-submit"
                   >
                     {isSubmitting ? (
                       <>
@@ -280,15 +267,18 @@ export default function ContactComponent() {
                     ) : (
                       <>
                         Отправить заявку
-                        <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                       </>
                     )}
                   </button>
 
-                  <p className="text-xs text-white/40 text-center">
-                    Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
+                  <p className="text-xs text-slate-400 text-center">
+                    Нажимая кнопку, вы соглашаетесь с{" "}
+                    <Link href="/privacy" className="text-blue-600 hover:underline">
+                      обработкой персональных данных
+                    </Link>
                   </p>
                 </form>
               )}
@@ -297,78 +287,57 @@ export default function ContactComponent() {
 
           {/* Contact Info */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-5"
           >
-            <div className="space-y-6">
+            <div className="space-y-5">
               {/* Contact Details */}
-              <div className="p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937] card-hover">
-                <h2 className="text-xl font-bold text-white mb-6">Контакты</h2>
+              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                <h2 className="text-lg font-bold text-slate-900 mb-5">Контакты</h2>
                 <div className="space-y-4">
                   {contactInfo.map((item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={isVisible ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                      className="flex items-start gap-4 group"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-[#00ff88]/10 flex items-center justify-center text-[#00ff88] flex-shrink-0 group-hover:bg-[#00ff88]/20 transition-colors">
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
                         {item.icon}
                       </div>
                       <div>
-                        <div className="text-sm text-white/50 mb-1">{item.label}</div>
+                        <div className="text-sm text-slate-500 mb-1">{item.label}</div>
                         {item.href ? (
-                          <a
-                            href={item.href}
-                            className="text-white hover:text-[#00ff88] transition-colors duration-300"
-                          >
+                          <a href={item.href} className="text-slate-900 hover:text-blue-600 transition-colors">
                             {item.value}
                           </a>
                         ) : (
-                          <span className="text-white">{item.value}</span>
+                          <span className="text-slate-900">{item.value}</span>
                         )}
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
 
               {/* Quick Response */}
-              <div className="p-8 rounded-2xl bg-gradient-to-r from-[#00ff88]/10 to-[#00d4ff]/10 border border-[#00ff88]/20">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-[#00ff88] animate-pulse glow-green" />
-                  <span className="text-sm font-medium text-[#00ff88]">Быстрый ответ</span>
+              <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-sm font-medium text-emerald-700">Быстрый ответ</span>
                 </div>
-                <p className="text-white/70 text-sm">
+                <p className="text-slate-700 text-sm">
                   Обычно отвечаем в течение 2-4 часов в рабочее время. 
                   Для срочных вопросов звоните по телефону.
                 </p>
               </div>
 
-              {/* What Happens Next */}
-              <div className="p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937]">
-                <h3 className="text-lg font-bold text-white mb-4">Что дальше?</h3>
+              {/* Mini FAQ */}
+              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+                <h3 className="text-lg font-bold text-slate-900 mb-4">Частые вопросы</h3>
                 <div className="space-y-4">
-                  {[
-                    { step: "1", text: "Свяжемся с вами для уточнения деталей" },
-                    { step: "2", text: "Проведём бесплатную консультацию" },
-                    { step: "3", text: "Подготовим коммерческое предложение" },
-                  ].map((item, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={isVisible ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                      className="flex items-center gap-3"
-                    >
-                      <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00ff88] to-[#00d4ff] text-[#0a0e17] text-sm font-bold flex items-center justify-center">
-                        {item.step}
-                      </span>
-                      <span className="text-white/70 text-sm">{item.text}</span>
-                    </motion.div>
+                  {faqItems.map((item, index) => (
+                    <div key={index}>
+                      <div className="text-sm font-medium text-slate-900 mb-1">{item.q}</div>
+                      <div className="text-sm text-slate-600">{item.a}</div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -378,7 +347,7 @@ export default function ContactComponent() {
                 href="https://t.me/webclinic"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 p-4 rounded-xl bg-[#0088cc]/10 border border-[#0088cc]/20 text-[#0088cc] hover:bg-[#0088cc]/20 transition-colors"
+                className="flex items-center justify-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-100 transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.308-.346-.11l-6.4 4.02-2.76-.918c-.6-.187-.612-.6.125-.89l10.782-4.156c.5-.18.94.12.78.878z"/>

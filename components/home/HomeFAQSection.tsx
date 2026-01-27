@@ -1,31 +1,12 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function HomeFAQSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [openItems, setOpenItems] = useState<number[]>([0]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) =>
@@ -35,63 +16,59 @@ export default function HomeFAQSection() {
 
   const faqs = [
     {
-      question: "Сколько стоит разработка проекта?",
+      question: "Сколько стоит сделать сайт?",
       answer:
-        "Стоимость зависит от сложности и объёма задач. Корпоративный сайт — от 150 000 ₽, веб-приложение — от 400 000 ₽, CRM/ERP система — от 800 000 ₽. Точную стоимость определяем после анализа требований на бесплатной консультации.",
+        "Зависит от того, что вам нужно. Простой лендинг — от 50 000 ₽, сайт компании — от 150 000 ₽, интернет-магазин — от 300 000 ₽. Точную цену называем после разговора о вашей задаче. Консультация бесплатная, без обязательств.",
     },
     {
-      question: "Сколько времени занимает разработка?",
+      question: "Сколько времени займёт работа?",
       answer:
-        "Сроки зависят от масштаба проекта. Корпоративный сайт — 4-6 недель, веб-приложение — 2-3 месяца, комплексная CRM/ERP система — 3-6 месяцев. На старте проекта составляем детальный план с конкретными датами.",
+        "Лендинг делаем за 3-4 недели, сайт компании — за 5-8 недель, интернет-магазин — за 2-3 месяца. Сроки зависят от объёма работ — обсудим и назовём конкретные даты до начала.",
     },
     {
-      question: "Как происходит процесс работы?",
+      question: "Можно ли вносить изменения в процессе?",
       answer:
-        "Работаем по чёткому процессу: анализ требований → техническое задание → прототип и дизайн → разработка → тестирование → запуск. На каждом этапе демонстрируем результат и согласовываем следующие шаги. Используем Jira для прозрачного трекинга задач.",
+        "Да, конечно. Мы показываем промежуточные результаты каждую неделю, и вы можете вносить коррективы. Если изменения небольшие — включаем бесплатно. Если существенные — обсуждаем отдельно.",
     },
     {
-      question: "Что входит в поддержку после запуска?",
+      question: "Что если мне не понравится результат?",
       answer:
-        "После запуска предоставляем гарантийную поддержку на 3 месяца: исправление багов, мелкие доработки. Далее предлагаем платную техническую поддержку: мониторинг, обновления, резервное копирование, развитие функционала.",
+        "До начала работ мы согласовываем всё в деталях, показываем макеты и прототипы. В процессе работы — регулярные демонстрации. Так мы убеждаемся, что идём в правильном направлении.",
     },
     {
-      question: "Можете ли вы доработать существующий проект?",
+      question: "Нужно ли разбираться в технических вещах?",
       answer:
-        "Да, работаем с готовыми проектами: рефакторинг кода, добавление функционала, оптимизация производительности, миграция на современный стек. Перед началом проводим аудит текущего состояния системы.",
+        "Нет. Мы объясняем всё простыми словами. Ваша задача — рассказать, что хотите получить. Мы предложим решение и объясним, почему оно подходит.",
     },
     {
-      question: "Какие гарантии вы даёте?",
+      question: "Что будет после запуска сайта?",
       answer:
-        "Фиксируем стоимость и сроки в договоре. Не берём предоплату более 30%. Исходный код передаём полностью. Гарантийная поддержка включена в стоимость проекта. NDA подписываем при необходимости.",
+        "3 месяца бесплатно исправляем любые ошибки, если что-то не работает как договаривались. Дальше — можем помогать с обновлениями и развитием за отдельную плату, или вы можете работать с другой командой.",
+    },
+    {
+      question: "Как начать работу?",
+      answer:
+        "Напишите или позвоните нам, расскажите о задаче. Мы зададим уточняющие вопросы и в течение 2-3 дней подготовим предложение с ценой и сроками. Дальше — решаете вы.",
     },
   ];
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-[#0f1520] relative overflow-hidden">
-      {/* Decorative orbs */}
-      <div className="orb orb-green w-96 h-96 -top-48 -left-48 animate-float" />
-      <div className="orb orb-cyan w-64 h-64 -bottom-32 -right-32 animate-float-delayed" />
-      
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
+    <section ref={sectionRef} className="py-16 lg:py-24 bg-slate-50">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16 lg:mb-20"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12 lg:mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-2 rounded-full bg-[#00ff88]/10 text-[#00ff88] text-sm font-medium mb-6"
-          >
+          <span className="inline-block px-4 py-2 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
             FAQ
-          </motion.span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.1] mb-6">
-            Частые <span className="text-[#00ff88] text-glow-green">вопросы</span>
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
+            Частые <span className="text-blue-600">вопросы</span>
           </h2>
-          <p className="text-lg lg:text-xl text-white/60 font-light leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Ответы на вопросы, которые нам задают чаще всего.
             Не нашли свой вопрос? Свяжитесь с нами.
           </p>
@@ -104,38 +81,33 @@ export default function HomeFAQSection() {
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={isVisible ? { opacity: 1, y: 0 } : {}}
-                transition={{
-                  duration: 0.6,
-                  delay: index * 0.1,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="group"
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
               >
                 <div
-                  className={`rounded-2xl border transition-all duration-500 card-hover ${
+                  className={`rounded-2xl border transition-all duration-200 ${
                     openItems.includes(index)
-                      ? "bg-[#0a0e17] border-[#00ff88]/30 glow-green"
-                      : "bg-[#0a0e17] border-[#1f2937] hover:border-[#00ff88]/20"
+                      ? "bg-white border-blue-200 shadow-md"
+                      : "bg-white border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   <button
                     onClick={() => toggleItem(index)}
-                    className="w-full px-6 lg:px-8 py-6 text-left flex items-center justify-between focus:outline-none"
+                    className="w-full px-6 lg:px-8 py-5 text-left flex items-center justify-between focus:outline-none"
                   >
-                    <h3 className="text-lg font-semibold text-white pr-4">
+                    <h3 className="text-lg font-semibold text-slate-900 pr-4">
                       {faq.question}
                     </h3>
                     <div
-                      className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-500 ${
+                      className={`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                         openItems.includes(index)
-                          ? "bg-[#00ff88] rotate-45 glow-green"
-                          : "bg-[#1f2937] group-hover:bg-[#00ff88]/20"
+                          ? "bg-blue-600 rotate-45"
+                          : "bg-slate-100"
                       }`}
                     >
                       <svg
-                        className={`w-5 h-5 transition-colors duration-300 ${
-                          openItems.includes(index) ? "text-[#0a0e17]" : "text-white"
+                        className={`w-5 h-5 transition-colors duration-200 ${
+                          openItems.includes(index) ? "text-white" : "text-slate-600"
                         }`}
                         fill="none"
                         stroke="currentColor"
@@ -157,12 +129,12 @@ export default function HomeFAQSection() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
                         className="overflow-hidden"
                       >
-                        <div className="px-6 lg:px-8 pb-6">
-                          <div className="border-t border-[#1f2937] pt-4">
-                            <p className="text-white/60 leading-relaxed">
+                        <div className="px-6 lg:px-8 pb-5">
+                          <div className="border-t border-slate-100 pt-4">
+                            <p className="text-slate-600 leading-relaxed">
                               {faq.answer}
                             </p>
                           </div>
@@ -179,37 +151,37 @@ export default function HomeFAQSection() {
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mt-16 lg:mt-20"
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-center mt-12 lg:mt-16"
         >
-          <div className="max-w-xl mx-auto p-8 lg:p-10 rounded-2xl bg-[#0a0e17] border border-[#1f2937] gradient-border">
-            <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">
-              Остались вопросы?
+          <div className="max-w-xl mx-auto p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm">
+            <h3 className="text-xl lg:text-2xl font-bold text-slate-900 mb-3">
+              Не нашли ответ на свой вопрос?
             </h3>
-            <p className="text-white/60 mb-6">
-              Расскажите о вашем проекте — проведём бесплатную консультацию 
-              и подготовим предварительную оценку.
+            <p className="text-slate-600 mb-6">
+              Напишите нам — ответим в течение нескольких часов.
             </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center px-8 py-4 bg-[#00ff88] text-[#0a0e17] font-semibold rounded-full hover:bg-[#00cc6a] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(0,255,136,0.4)] group"
-            >
-              Получить консультацию
-              <svg
-                className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm"
+                data-cta="faq-question"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </Link>
+                Задать вопрос
+                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </Link>
+              <a
+                href="https://t.me/webclinic"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-6 py-3 border border-slate-200 text-slate-700 font-medium rounded-xl hover:border-blue-600 hover:text-blue-600 transition-all duration-200"
+              >
+                Написать в Telegram
+              </a>
+            </div>
           </div>
         </motion.div>
       </div>

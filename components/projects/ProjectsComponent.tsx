@@ -1,7 +1,7 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 interface Project {
   id: string;
@@ -10,8 +10,7 @@ interface Project {
   description: string;
   result: string;
   technologies: string[];
-  image: string;
-  gradient: string;
+  color: string;
   stats: { label: string; value: string }[];
 }
 
@@ -23,8 +22,7 @@ const projects: Project[] = [
     description: "Разработали кастомную CRM-систему для управления грузоперевозками. Полный цикл от заявки до доставки с отслеживанием в реальном времени.",
     result: "Автоматизировали 80% рутинных процессов, сократили время обработки заявки с 30 до 5 минут.",
     technologies: ["React", "Node.js", "PostgreSQL", "Docker", "Redis"],
-    image: "/projects/crm.jpg",
-    gradient: "from-[#00ff88] to-[#00d4ff]",
+    color: "blue",
     stats: [
       { label: "Сокращение времени", value: "-83%" },
       { label: "Автоматизация", value: "80%" },
@@ -38,8 +36,7 @@ const projects: Project[] = [
     description: "Создали высоконагруженный интернет-магазин с интеграцией 1C, платёжных систем и служб доставки. Поддержка до 10 000 одновременных пользователей.",
     result: "Конверсия выросла на 40%, время загрузки страниц — менее 1 секунды.",
     technologies: ["Next.js", "TypeScript", "Stripe", "1C API", "AWS"],
-    image: "/projects/ecommerce.jpg",
-    gradient: "from-[#00d4ff] to-[#8b5cf6]",
+    color: "emerald",
     stats: [
       { label: "Рост конверсии", value: "+40%" },
       { label: "Время загрузки", value: "<1 сек" },
@@ -53,8 +50,7 @@ const projects: Project[] = [
     description: "Внутренний портал для 500+ сотрудников: заявки на отпуск, документооборот, обучение, KPI-трекинг и интеграция с 1С ЗУП.",
     result: "HR-отдел сократил время на рутину на 60%, все процессы стали прозрачными.",
     technologies: ["React", "Node.js", "MongoDB", "1C ЗУП", "Telegram Bot"],
-    image: "/projects/hr.jpg",
-    gradient: "from-[#8b5cf6] to-[#ec4899]",
+    color: "violet",
     stats: [
       { label: "Экономия времени", value: "60%" },
       { label: "Сотрудников", value: "500+" },
@@ -68,8 +64,7 @@ const projects: Project[] = [
     description: "Онлайн-система бронирования для сети клиник: расписание врачей, уведомления, интеграция с МИС и приём онлайн-оплаты.",
     result: "Количество онлайн-записей выросло в 3 раза, пропущенные приёмы сократились на 50%.",
     technologies: ["Next.js", "PostgreSQL", "Twilio", "YooKassa", "МИС API"],
-    image: "/projects/booking.jpg",
-    gradient: "from-[#ec4899] to-[#f97316]",
+    color: "orange",
     stats: [
       { label: "Онлайн-записей", value: "x3" },
       { label: "Меньше пропусков", value: "-50%" },
@@ -83,89 +78,51 @@ const projects: Project[] = [
     description: "Дашборд для руководства с агрегацией данных из 8 источников: продажи, маркетинг, финансы, HR. Автоматические отчёты и алерты.",
     result: "Руководство получает полную картину бизнеса за 5 минут вместо 2 часов ручной сборки.",
     technologies: ["React", "Python", "ClickHouse", "Grafana", "Airflow"],
-    image: "/projects/analytics.jpg",
-    gradient: "from-[#f97316] to-[#00ff88]",
+    color: "rose",
     stats: [
       { label: "Источников данных", value: "8" },
       { label: "Экономия времени", value: "-95%" },
       { label: "Автоотчётов", value: "25+" },
     ],
   },
-  {
-    id: "api-integration",
-    title: "API-интеграция маркетплейсов",
-    category: "Интеграции",
-    description: "Единая панель управления товарами на Ozon, Wildberries и Яндекс.Маркет. Синхронизация остатков, цен и заказов в реальном времени.",
-    result: "Вместо 3 кабинетов — один интерфейс. Ошибки в остатках сократились до нуля.",
-    technologies: ["Node.js", "REST API", "PostgreSQL", "Redis", "RabbitMQ"],
-    image: "/projects/api.jpg",
-    gradient: "from-[#00d4ff] to-[#00ff88]",
-    stats: [
-      { label: "Маркетплейсов", value: "3" },
-      { label: "Ошибок", value: "0" },
-      { label: "Товаров", value: "50K+" },
-    ],
-  },
 ];
 
-const categories = ["Все", "Веб-разработка", "CRM/ERP", "Автоматизация", "Интеграции"];
+const categories = ["Все", "Веб-разработка", "CRM/ERP", "Автоматизация"];
 
 export default function ProjectsComponent() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [selectedCategory, setSelectedCategory] = useState("Все");
-  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  const colorClasses = {
+    blue: { bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
+    emerald: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
+    violet: { bg: "bg-violet-50", text: "text-violet-600", border: "border-violet-200" },
+    orange: { bg: "bg-orange-50", text: "text-orange-600", border: "border-orange-200" },
+    rose: { bg: "bg-rose-50", text: "text-rose-600", border: "border-rose-200" },
+  };
 
   const filteredProjects = selectedCategory === "Все"
     ? projects
     : projects.filter((p) => p.category === selectedCategory);
 
   return (
-    <section ref={sectionRef} className="pt-32 pb-24 lg:pb-32 bg-[#0a0e17] min-h-screen relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 grid-pattern-animated opacity-20" />
-      <div className="orb orb-green w-[500px] h-[500px] -top-64 -right-64 opacity-20" />
-      <div className="orb orb-purple w-[400px] h-[400px] bottom-0 -left-48 opacity-15" />
-
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-8 relative z-10">
+    <section ref={sectionRef} className="pt-28 lg:pt-32 pb-16 lg:pb-24 bg-white min-h-screen">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
           className="text-center mb-12 lg:mb-16"
         >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block px-4 py-2 rounded-full bg-[#00ff88]/10 text-[#00ff88] text-sm font-medium mb-6"
-          >
+          <span className="inline-block px-4 py-2 rounded-full bg-violet-50 text-violet-600 text-sm font-medium mb-4">
             Портфолио
-          </motion.span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] mb-6">
-            Наши <span className="text-[#00ff88] text-glow-green">проекты</span>
+          </span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
+            Наши <span className="text-blue-600">проекты</span>
           </h1>
-          <p className="text-lg lg:text-xl text-white/60 font-light leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Реальные кейсы с измеримыми результатами. 
             Каждый проект — это история успешного решения бизнес-задачи.
           </p>
@@ -174,18 +131,18 @@ export default function ProjectsComponent() {
         {/* Filter */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, delay: 0.1 }}
           className="flex flex-wrap justify-center gap-3 mb-12"
         >
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
                 selectedCategory === category
-                  ? "bg-[#00ff88] text-[#0a0e17]"
-                  : "bg-[#0f1520] text-white/70 border border-[#1f2937] hover:border-[#00ff88]/50 hover:text-white"
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
               {category}
@@ -194,139 +151,105 @@ export default function ProjectsComponent() {
         </motion.div>
 
         {/* Projects Grid */}
-        <motion.div
-          layout
-          className="grid md:grid-cols-2 gap-6 lg:gap-8"
-        >
+        <motion.div layout className="grid md:grid-cols-2 gap-6 lg:gap-8">
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                onMouseEnter={() => setHoveredProject(project.id)}
-                onMouseLeave={() => setHoveredProject(null)}
-                className="group relative"
-              >
-                {/* Glow effect */}
-                <div 
-                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-gradient-to-r ${project.gradient}`}
-                  style={{ opacity: hoveredProject === project.id ? 0.2 : 0 }}
-                />
-
-                <div className="relative p-6 lg:p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-500 card-hover h-full overflow-hidden">
-                  {/* Top gradient bar */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${project.gradient} opacity-50 group-hover:opacity-100 transition-opacity duration-300`} />
-                  
-                  {/* Category badge */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 rounded-full bg-[#00ff88]/10 text-[#00ff88] text-xs font-medium">
-                      {project.category}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-4 group-hover:text-[#00ff88] transition-colors duration-300">
-                    {project.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-white/60 leading-relaxed mb-4">
-                    {project.description}
-                  </p>
-
-                  {/* Result */}
-                  <div className="p-4 rounded-xl bg-[#00ff88]/10 border border-[#00ff88]/20 mb-6">
-                    <span className="text-xs uppercase tracking-wider text-[#00ff88] font-medium">Результат</span>
-                    <p className="text-white/80 mt-1 text-sm">{project.result}</p>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
-                    {project.stats.map((stat, i) => (
-                      <div key={i} className="text-center">
-                        <div className="text-xl lg:text-2xl font-bold text-white">{stat.value}</div>
-                        <div className="text-xs text-white/50">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.technologies.map((tech, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 rounded-full bg-[#1f2937] text-white/70 text-xs font-mono group-hover:bg-[#00ff88]/10 group-hover:text-[#00ff88] transition-all duration-300"
-                      >
-                        {tech}
+            {filteredProjects.map((project, index) => {
+              const colors = colorClasses[project.color as keyof typeof colorClasses];
+              return (
+                <motion.div
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                >
+                  <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 hover:shadow-lg hover:border-slate-300 transition-all duration-200 h-full">
+                    {/* Category badge */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`px-3 py-1 rounded-full ${colors.bg} ${colors.text} text-xs font-medium`}>
+                        {project.category}
                       </span>
-                    ))}
-                  </div>
+                    </div>
 
-                  {/* CTA */}
-                  <Link
-                    href={`/projects/${project.id}`}
-                    className="inline-flex items-center text-[#00ff88] font-medium group/link"
-                  >
-                    <span className="relative">
-                      Подробнее о проекте
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#00ff88] group-hover/link:w-full transition-all duration-300" />
-                    </span>
-                    <svg
-                      className="ml-2 w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                    {/* Title */}
+                    <h3 className="text-xl lg:text-2xl font-bold text-slate-900 mb-4">
+                      {project.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-slate-600 leading-relaxed mb-4">
+                      {project.description}
+                    </p>
+
+                    {/* Result */}
+                    <div className={`p-4 rounded-xl ${colors.bg} ${colors.border} border mb-6`}>
+                      <span className={`text-xs uppercase tracking-wider ${colors.text} font-medium`}>Результат</span>
+                      <p className="text-slate-700 mt-1 text-sm">{project.result}</p>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      {project.stats.map((stat, i) => (
+                        <div key={i} className="text-center">
+                          <div className="text-xl lg:text-2xl font-bold text-slate-900">{stat.value}</div>
+                          <div className="text-xs text-slate-500">{stat.label}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.technologies.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* CTA */}
+                    <Link
+                      href={`/projects/${project.id}`}
+                      className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
+                      Подробнее о проекте
+                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
 
         {/* CTA Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mt-16 lg:mt-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-center mt-12 lg:mt-16"
         >
-          <div className="max-w-2xl mx-auto p-8 lg:p-12 rounded-2xl bg-gradient-to-r from-[#00ff88]/10 to-[#00d4ff]/10 border border-[#00ff88]/20">
-            <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
+          <div className="max-w-2xl mx-auto p-6 lg:p-8 rounded-2xl bg-blue-50 border border-blue-100">
+            <h3 className="text-2xl font-bold text-slate-900 mb-4">
               Хотите такой же результат?
             </h3>
-            <p className="text-white/60 mb-8">
+            <p className="text-slate-600 mb-6">
               Расскажите о вашей задаче — мы найдём оптимальное решение.
               Первая консультация бесплатно.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center px-8 py-4 bg-[#00ff88] text-[#0a0e17] font-semibold rounded-full hover:bg-[#00cc6a] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(0,255,136,0.4)] group"
+              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-sm"
+              data-cta="projects-contact"
             >
               Обсудить проект
-              <svg
-                className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
           </div>

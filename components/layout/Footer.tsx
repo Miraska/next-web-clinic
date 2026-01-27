@@ -1,14 +1,19 @@
 "use client";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import ConsultationModal from "@/components/ui/ConsultationModal";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const footerRef = useRef(null);
+  const isInView = useInView(footerRef, { once: true, margin: "-100px" });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigationLinks = [
     { href: "/", label: "Главная" },
     { href: "/services", label: "Услуги" },
-    { href: "/projects", label: "Проекты" },
+    { href: "/projects", label: "Кейсы" },
     { href: "/about", label: "О нас" },
     { href: "/contact", label: "Контакты" },
   ];
@@ -19,6 +24,12 @@ export default function Footer() {
     { href: "/services/automation", label: "Автоматизация бизнеса" },
     { href: "/services/api-integrations", label: "API и интеграции" },
     { href: "/services/support", label: "Поддержка и развитие" },
+  ];
+
+  const helpfulLinks = [
+    { href: "/how-to-choose", label: "Как выбрать подрядчика" },
+    { href: "/privacy", label: "Политика конфиденциальности" },
+    { href: "/terms", label: "Публичная оферта" },
   ];
 
   const socialLinks = [
@@ -40,151 +51,195 @@ export default function Footer() {
         </svg>
       ),
     },
-    {
-      href: "https://linkedin.com/company/webclinic",
-      label: "LinkedIn",
-      icon: (
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-        </svg>
-      ),
-    },
   ];
 
   return (
-    <footer className="bg-[#0a0e17] border-t border-[#1f2937] relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00ff88]/30 to-transparent" />
-      
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
-        {/* Main Footer Content */}
-        <div className="py-16 lg:py-20">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
-            {/* Brand & Contact */}
-            <div className="lg:col-span-5">
-              <Link href="/" className="inline-block mb-6 group">
-                <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  className="text-3xl font-bold tracking-tight"
-                >
-                  <span className="text-white">Web</span>
-                  <span className="text-[#00ff88] group-hover:text-glow-green transition-all">Clinic</span>
-                </motion.div>
-              </Link>
-              <p className="text-white/60 leading-relaxed mb-8 max-w-md">
-                Разрабатываем надёжные веб-системы и автоматизируем бизнес-процессы. 
-                Полный цикл разработки под ключ для растущего бизнеса.
-              </p>
-              <div className="space-y-3 mb-8">
-                <a
-                  href="mailto:hello@webclinic.dev"
-                  className="flex items-center gap-3 text-white/80 hover:text-[#00ff88] transition-colors duration-300 group"
-                >
-                  <svg className="w-5 h-5 text-[#00ff88]/70 group-hover:text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  hello@webclinic.dev
-                </a>
-                <a
-                  href="tel:+74951234567"
-                  className="flex items-center gap-3 text-white/80 hover:text-[#00ff88] transition-colors duration-300 group"
-                >
-                  <svg className="w-5 h-5 text-[#00ff88]/70 group-hover:text-[#00ff88]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  +7 (495) 123-45-67
-                </a>
-              </div>
-              
-              {/* Social Links */}
-              <div className="flex gap-4">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-lg bg-[#0f1520] border border-[#1f2937] flex items-center justify-center text-white/60 hover:text-[#00ff88] hover:border-[#00ff88]/30 transition-all duration-300"
-                    aria-label={social.label}
-                  >
-                    {social.icon}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="lg:col-span-3">
-              <h3 className="text-white font-semibold mb-6">Навигация</h3>
-              <nav className="space-y-3">
-                {navigationLinks.map((link) => (
-                  <div key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="block text-white/60 hover:text-[#00ff88] hover:translate-x-1 transition-all duration-300"
-                    >
-                      {link.label}
-                    </Link>
-                  </div>
-                ))}
-              </nav>
-            </div>
-
-            {/* Services */}
-            <div className="lg:col-span-4">
-              <h3 className="text-white font-semibold mb-6">Услуги</h3>
-              <nav className="space-y-3">
-                {services.map((service) => (
-                  <div key={service.href}>
-                    <Link
-                      href={service.href}
-                      className="block text-white/60 hover:text-[#00ff88] hover:translate-x-1 transition-all duration-300"
-                    >
-                      {service.label}
-                    </Link>
-                  </div>
-                ))}
-              </nav>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Banner */}
-        <div className="py-8 border-t border-[#1f2937]">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-6 rounded-2xl bg-gradient-to-r from-[#00ff88]/10 to-[#00d4ff]/10 border border-[#00ff88]/20">
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-1">Готовы начать проект?</h4>
-              <p className="text-white/60 text-sm">Первая консультация бесплатно</p>
-            </div>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center px-6 py-3 bg-[#00ff88] text-[#0a0e17] font-semibold rounded-full hover:bg-[#00cc6a] transition-all duration-300 hover:scale-105 group"
-            >
-              Обсудить проект
-              <svg className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="py-6 border-t border-[#1f2937]">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="text-white/40 text-sm">
-              © {currentYear} WebClinic Solutions. Все права защищены.
-            </div>
-            <div className="flex gap-6 text-sm">
-              <Link
-                href="/privacy"
-                className="text-white/40 hover:text-white/60 transition-colors duration-300"
+    <>
+      <footer ref={footerRef} className="bg-slate-50 border-t border-slate-200">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
+          {/* Main Footer Content */}
+          <div className="py-12 lg:py-16">
+            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+              {/* Brand & Contact */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4 }}
+                className="lg:col-span-4"
               >
-                Политика конфиденциальности
-              </Link>
+                <Link href="/" className="inline-flex items-center gap-2 mb-5">
+                  <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">W</span>
+                  </div>
+                  <span className="text-xl font-bold text-slate-900">WebClinic</span>
+                </Link>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  Делаем сайты и веб-сервисы, которые реально помогают бизнесу.
+                  Понятно, в срок и без сюрпризов.
+                </p>
+                <div className="space-y-3 mb-6">
+                  <a
+                    href="mailto:hello@webclinic.dev"
+                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    hello@webclinic.dev
+                  </a>
+                  <a
+                    href="tel:+74951234567"
+                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                    </div>
+                    +7 (495) 123-45-67
+                  </a>
+                </div>
+                
+                {/* Social Links */}
+                <div className="flex gap-3">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-all"
+                      aria-label={social.label}
+                    >
+                      {social.icon}
+                    </a>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Navigation */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="lg:col-span-2"
+              >
+                <h3 className="text-slate-900 font-semibold mb-4">Навигация</h3>
+                <nav className="space-y-2.5">
+                  {navigationLinks.map((link) => (
+                    <div key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="block text-slate-600 hover:text-blue-600 transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </div>
+                  ))}
+                </nav>
+              </motion.div>
+
+              {/* Services */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: 0.15 }}
+                className="lg:col-span-3"
+              >
+                <h3 className="text-slate-900 font-semibold mb-4">Услуги</h3>
+                <nav className="space-y-2.5">
+                  {services.map((service) => (
+                    <div key={service.href}>
+                      <Link
+                        href={service.href}
+                        className="block text-slate-600 hover:text-blue-600 transition-colors"
+                      >
+                        {service.label}
+                      </Link>
+                    </div>
+                  ))}
+                </nav>
+              </motion.div>
+
+              {/* Helpful */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="lg:col-span-3"
+              >
+                <h3 className="text-slate-900 font-semibold mb-4">Полезное</h3>
+                <nav className="space-y-2.5">
+                  {helpfulLinks.map((link) => (
+                    <div key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="block text-slate-600 hover:text-blue-600 transition-colors"
+                      >
+                        {link.label}
+                      </Link>
+                    </div>
+                  ))}
+                </nav>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* CTA Banner */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.4, delay: 0.25 }}
+            className="py-6 border-t border-slate-200"
+          >
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl bg-blue-50 border border-blue-100">
+              <div>
+                <h4 className="text-lg font-semibold text-slate-900 mb-1">Есть вопрос или задача?</h4>
+                <p className="text-slate-600 text-sm">Расскажите — ответим в течение нескольких часов</p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all text-sm"
+                  data-cta="footer-request"
+                >
+                  Оставить заявку
+                </button>
+                <a
+                  href="https://t.me/webclinic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-5 py-2.5 border border-slate-200 text-slate-700 font-medium rounded-lg hover:border-blue-600 hover:text-blue-600 transition-all text-sm"
+                >
+                  Telegram
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Bottom Bar */}
+          <div className="py-5 border-t border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="text-slate-500 text-sm">
+                © {currentYear} WebClinic. Все права защищены.
+              </div>
+              <div className="flex gap-6 text-sm">
+                <Link href="/privacy" className="text-slate-500 hover:text-slate-700 transition-colors">
+                  Политика конфиденциальности
+                </Link>
+                <Link href="/terms" className="text-slate-500 hover:text-slate-700 transition-colors">
+                  Оферта
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+
+      {/* Consultation Modal */}
+      <ConsultationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
   );
 }
