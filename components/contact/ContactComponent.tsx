@@ -1,11 +1,10 @@
 "use client";
-import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { Mail, MessageCircle, Phone, ArrowRight, Lock, FileText, Check, Clock } from "lucide-react";
 
 export default function ContactComponent() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -71,33 +70,21 @@ export default function ContactComponent() {
 
   const contactInfo = [
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: Mail,
       label: "Email",
       value: "hello@webclinic.dev",
       href: "mailto:hello@webclinic.dev",
       description: "Ответим в течение рабочего дня",
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.308-.346-.11l-6.4 4.02-2.76-.918c-.6-.187-.612-.6.125-.89l10.782-4.156c.5-.18.94.12.78.878z"/>
-        </svg>
-      ),
+      icon: MessageCircle,
       label: "Telegram",
       value: "@webclinic",
       href: "https://t.me/webclinic",
       description: "Быстрый ответ",
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      ),
+      icon: Phone,
       label: "Телефон",
       value: "+7 (495) 123-45-67",
       href: "tel:+74951234567",
@@ -128,17 +115,18 @@ export default function ContactComponent() {
     },
   ];
 
+  const trustBadges = [
+    { icon: Lock, text: "Данные защищены" },
+    { icon: FileText, text: "Работаем по договору" },
+    { icon: Check, text: "Без спама" },
+  ];
+
   return (
     <section ref={sectionRef} className="pt-28 lg:pt-32 pb-16 lg:pb-24 bg-white min-h-screen">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 lg:mb-16"
-        >
-          <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-4">
+        <div className="text-center mb-12 lg:mb-16">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
             Контакты
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
@@ -148,27 +136,16 @@ export default function ContactComponent() {
             Расскажите о вашей задаче — мы свяжемся в течение рабочего дня.
             Консультация и оценка проекта бесплатны.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-7"
-          >
-            <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-100">
+          <div className="lg:col-span-7">
+            <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 shadow-lg">
               {submitStatus === "success" ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-12"
-                >
-                  <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-10 h-10 text-blue-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">Заявка отправлена!</h3>
                   <p className="text-slate-600 mb-6">Мы свяжемся с вами в ближайшее время.</p>
@@ -178,13 +155,13 @@ export default function ContactComponent() {
                   >
                     Отправить ещё одну заявку
                   </button>
-                </motion.div>
+                </div>
               ) : (
                 <>
                   <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
                     <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
                     </span>
                     Оставить заявку
                   </h2>
@@ -201,7 +178,7 @@ export default function ContactComponent() {
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
                           placeholder="Как к вам обращаться?"
                         />
                       </div>
@@ -215,7 +192,7 @@ export default function ContactComponent() {
                           value={formData.email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
                           placeholder="email@company.ru"
                         />
                       </div>
@@ -231,7 +208,7 @@ export default function ContactComponent() {
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
                           placeholder="+7... или @username"
                         />
                       </div>
@@ -243,7 +220,7 @@ export default function ContactComponent() {
                           name="projectType"
                           value={formData.projectType}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
                         >
                           {projectTypes.map((option) => (
                             <option key={option.value} value={option.value}>
@@ -262,7 +239,7 @@ export default function ContactComponent() {
                         name="budget"
                         value={formData.budget}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
                       >
                         {budgetOptions.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -282,7 +259,7 @@ export default function ContactComponent() {
                         onChange={handleChange}
                         required
                         rows={5}
-                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors resize-none"
                         placeholder="Расскажите, что хотите сделать. Чем подробнее — тем точнее оценим."
                       />
                     </div>
@@ -290,7 +267,7 @@ export default function ContactComponent() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 px-8 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg shadow-blue-600/20"
+                      className="w-full py-3.5 px-8 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                       data-cta="contact-form-submit"
                     >
                       {isSubmitting ? (
@@ -304,9 +281,7 @@ export default function ContactComponent() {
                       ) : (
                         <>
                           Отправить заявку
-                          <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
+                          <ArrowRight className="ml-2 w-5 h-5" />
                         </>
                       )}
                     </button>
@@ -321,53 +296,46 @@ export default function ContactComponent() {
                 </>
               )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Contact Info & FAQ */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-5"
-          >
+          <div className="lg:col-span-5">
             <div className="space-y-5">
               {/* Quick Contact */}
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-50/50 border border-blue-100">
+              <div className="p-6 rounded-2xl bg-blue-50 border border-blue-100">
                 <h3 className="text-lg font-bold text-slate-900 mb-4">Быстрая связь</h3>
                 <div className="space-y-3">
-                  {contactInfo.map((item, index) => (
-                    <a
-                      key={index}
-                      href={item.href}
-                      target={item.href.startsWith("http") ? "_blank" : undefined}
-                      rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="flex items-center gap-4 p-3 rounded-xl bg-white border border-slate-100 hover:border-blue-200 hover:shadow-sm transition-all group"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                        {item.icon}
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm text-slate-400">{item.label}</div>
-                        <div className="text-slate-900 font-medium">{item.value}</div>
-                      </div>
-                      <svg className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  ))}
+                  {contactInfo.map((item, index) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <a
+                        key={index}
+                        href={item.href}
+                        target={item.href.startsWith("http") ? "_blank" : undefined}
+                        rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        className="flex items-center gap-4 p-3 rounded-xl bg-white border border-blue-100 hover:border-blue-200 hover:shadow-sm transition-all group"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                          <IconComponent className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-sm text-slate-400">{item.label}</div>
+                          <div className="text-slate-900 font-medium">{item.value}</div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Response time */}
-              <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-100">
+              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                  </div>
-                  <span className="text-sm font-semibold text-emerald-700">Онлайн</span>
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-medium text-slate-900">Время ответа</span>
                 </div>
-                <p className="text-slate-700 text-sm">
+                <p className="text-slate-600 text-sm">
                   Обычно отвечаем в течение 2-4 часов в рабочее время (Пн-Пт, 10:00-19:00 МСК).
                 </p>
               </div>
@@ -378,7 +346,7 @@ export default function ContactComponent() {
                 <div className="space-y-4">
                   {faqItems.map((item, index) => (
                     <div key={index} className="pb-4 border-b border-slate-200 last:border-0 last:pb-0">
-                      <div className="text-sm font-semibold text-slate-900 mb-1">{item.q}</div>
+                      <div className="text-sm font-medium text-slate-900 mb-1">{item.q}</div>
                       <div className="text-sm text-slate-500">{item.a}</div>
                     </div>
                   ))}
@@ -387,19 +355,18 @@ export default function ContactComponent() {
 
               {/* Trust badges */}
               <div className="flex flex-wrap gap-3 justify-center">
-                {[
-                  { icon: "🔒", text: "Данные защищены" },
-                  { icon: "📝", text: "Работаем по договору" },
-                  { icon: "✅", text: "Без спама" },
-                ].map((badge, index) => (
-                  <div key={index} className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600">
-                    <span>{badge.icon}</span>
-                    <span>{badge.text}</span>
-                  </div>
-                ))}
+                {trustBadges.map((badge, index) => {
+                  const IconComponent = badge.icon;
+                  return (
+                    <div key={index} className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600">
+                      <IconComponent className="w-4 h-4 text-blue-600" />
+                      <span>{badge.text}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

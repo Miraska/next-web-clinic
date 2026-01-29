@@ -1,11 +1,18 @@
 "use client";
-import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import Link from "next/link";
+import {
+  Mail,
+  Phone,
+  Clock,
+  Shield,
+  Lock,
+  Check,
+  ArrowRight,
+} from "lucide-react";
 
 export default function HomeFinalCTASection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   
   const [formData, setFormData] = useState({
     name: "",
@@ -28,10 +35,10 @@ export default function HomeFinalCTASection() {
   };
 
   const benefits = [
-    { icon: "✓", text: "Бесплатная консультация" },
-    { icon: "✓", text: "Оценка проекта за 2-3 дня" },
-    { icon: "✓", text: "Честная цена без сюрпризов" },
-    { icon: "✓", text: "Ответим в течение 2 часов" },
+    { text: "Бесплатная консультация" },
+    { text: "Оценка проекта за 2-3 дня" },
+    { text: "Честная цена без сюрпризов" },
+    { text: "Ответим в течение 2 часов" },
   ];
 
   const contactMethods = [
@@ -45,84 +52,47 @@ export default function HomeFinalCTASection() {
       value: "@webclinic",
       href: "https://t.me/webclinic",
       description: "Быстрый ответ",
-      color: "blue",
     },
     {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: <Mail className="w-6 h-6" />,
       label: "Email",
       value: "hello@webclinic.dev",
       href: "mailto:hello@webclinic.dev",
       description: "Для подробных запросов",
-      color: "emerald",
     },
     {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      ),
+      icon: <Phone className="w-6 h-6" />,
       label: "Телефон",
       value: "+7 (495) 123-45-67",
       href: "tel:+74951234567",
       description: "Пн-Пт: 10:00-19:00",
-      color: "violet",
     },
   ];
 
-  const colorClasses: Record<string, string> = {
-    blue: "bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100",
-    emerald: "bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100",
-    violet: "bg-violet-50 text-violet-600 border-violet-100 hover:bg-violet-100",
-  };
-
   return (
-    <section ref={sectionRef} className="py-16 lg:py-24 bg-gradient-to-b from-white to-blue-50 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-100 rounded-full blur-3xl opacity-30" />
-
-      <div className="relative max-w-[1280px] mx-auto px-6 lg:px-8">
+    <section ref={sectionRef} className="py-20 lg:py-28 bg-white">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-4">
-            Начать работу
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+            Следующий шаг
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
-            Готовы обсудить <span className="text-blue-600">проект?</span>
+            Готовы начать? <span className="text-blue-600">Обсудим проект</span>
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Оставьте заявку или напишите напрямую. 
-            Расскажите о задаче — предложим решение и посчитаем стоимость.
+            Оставьте заявку или напишите напрямую — расскажите о задаче, и мы предложим решение с точной стоимостью.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl shadow-slate-200/50 border border-slate-200">
+          <div>
+            <div className="bg-slate-50 rounded-2xl p-6 lg:p-8 border border-slate-200">
               {isSuccess ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8"
-                >
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Check className="w-8 h-8 text-blue-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">Заявка отправлена!</h3>
                   <p className="text-slate-600 mb-6">Мы свяжемся с вами в течение 2 часов в рабочее время.</p>
@@ -132,11 +102,11 @@ export default function HomeFinalCTASection() {
                   >
                     Отправить ещё одну заявку
                   </button>
-                </motion.div>
+                </div>
               ) : (
                 <>
-                  <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <h3 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-blue-600" />
                     Быстрая заявка
                   </h3>
 
@@ -151,7 +121,7 @@ export default function HomeFinalCTASection() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Иван Иванов"
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                       />
                     </div>
 
@@ -165,7 +135,7 @@ export default function HomeFinalCTASection() {
                         value={formData.contact}
                         onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
                         placeholder="@username или +7..."
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors"
                       />
                     </div>
 
@@ -178,14 +148,14 @@ export default function HomeFinalCTASection() {
                         onChange={(e) => setFormData({ ...formData, task: e.target.value })}
                         placeholder="Нужен сайт для..., хочу автоматизировать..."
                         rows={4}
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
+                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none transition-colors resize-none"
                       />
                     </div>
 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20"
+                      className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       data-cta="final-cta-submit"
                     >
                       {isSubmitting ? (
@@ -199,9 +169,7 @@ export default function HomeFinalCTASection() {
                       ) : (
                         <>
                           Отправить заявку
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
+                          <ArrowRight className="w-4 h-4" />
                         </>
                       )}
                     </button>
@@ -220,113 +188,80 @@ export default function HomeFinalCTASection() {
             {/* Benefits */}
             <div className="grid grid-cols-2 gap-3 mt-6">
               {benefits.map((benefit, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
                   className="flex items-center gap-2 text-sm text-slate-600"
                 >
-                  <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold flex-shrink-0">
-                    {benefit.icon}
-                  </span>
+                  <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
                   {benefit.text}
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Contact Methods */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
-          >
+          <div className="space-y-6">
             <div className="text-center lg:text-left mb-8">
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Или напишите напрямую</h3>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Или напишите напрямую</h3>
               <p className="text-slate-500">Выберите удобный способ связи</p>
             </div>
 
             <div className="space-y-4">
               {contactMethods.map((method, index) => (
-                <motion.a
+                <a
                   key={index}
                   href={method.href}
                   target={method.href.startsWith("http") ? "_blank" : undefined}
                   rel={method.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                  className={`flex items-center gap-4 p-5 rounded-2xl border transition-all group ${colorClasses[method.color]}`}
+                  className="flex items-center gap-4 p-5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-200 transition-colors group"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                  <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
                     {method.icon}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-slate-900">{method.label}</span>
-                      <span className="text-xs px-2 py-0.5 bg-white rounded-full text-slate-500">{method.description}</span>
+                      <span className="font-medium text-slate-900">{method.label}</span>
+                      <span className="text-xs px-2 py-0.5 bg-white rounded-full text-slate-500 border border-slate-200">{method.description}</span>
                     </div>
                     <span className="text-slate-600">{method.value}</span>
                   </div>
-                  <svg className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </motion.a>
+                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                </a>
               ))}
             </div>
 
             {/* Quick info */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.3, delay: 0.6 }}
-              className="p-6 rounded-2xl bg-slate-50 border border-slate-200"
-            >
+            <div className="p-6 rounded-xl bg-slate-50 border border-slate-200">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-1">Время работы</h4>
+                  <h4 className="font-medium text-slate-900 mb-1">Время работы</h4>
                   <p className="text-sm text-slate-600">
                     Пн-Пт: 10:00 – 19:00 (МСК)<br />
                     В другое время — ответим на следующий рабочий день
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Trust note */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.3, delay: 0.7 }}
-              className="flex items-center justify-center lg:justify-start gap-6 text-sm text-slate-500"
-            >
+            <div className="flex items-center justify-center lg:justify-start gap-6 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
+                <Shield className="w-4 h-4 text-blue-600" />
                 Безопасно
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+                <Lock className="w-4 h-4 text-blue-600" />
                 Данные защищены
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+                <Check className="w-4 h-4 text-blue-600" />
                 Без спама
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

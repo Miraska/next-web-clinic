@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Контакты — WebClinic Solutions",
     description:
       "Свяжитесь с нами для обсуждения вашего проекта. Бесплатная консультация и оценка стоимости.",
-    url: "https://WebClinic-solutions.dev/contact",
+    url: "https://webclinic-solutions.dev/contact",
   },
 };
 

@@ -1,10 +1,9 @@
 "use client";
-import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
+import { ChevronDown, HelpCircle } from "lucide-react";
 
 export default function HomeFAQSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   const faqCategories = [
     { id: "general", label: "Общие вопросы" },
@@ -106,16 +105,11 @@ export default function HomeFAQSection() {
   };
 
   return (
-    <section ref={sectionRef} className="py-16 lg:py-24 bg-slate-50">
+    <section ref={sectionRef} className="py-20 lg:py-28 bg-white">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <span className="inline-block px-4 py-2 rounded-full bg-cyan-100 text-cyan-700 text-sm font-medium mb-4">
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
             Частые вопросы
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
@@ -124,15 +118,10 @@ export default function HomeFAQSection() {
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Собрали самые популярные вопросы. Не нашли свой — напишите нам.
           </p>
-        </motion.div>
+        </div>
 
         {/* Category tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap justify-center gap-2 mb-10"
-        >
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
           {faqCategories.map((category) => (
             <button
               key={category.id}
@@ -140,101 +129,63 @@ export default function HomeFAQSection() {
                 setActiveCategory(category.id);
                 setOpenItems([0]);
               }}
-              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
+              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 activeCategory === category.id
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                  : "bg-white text-slate-600 border border-slate-200 hover:border-blue-300 hover:text-blue-600"
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
               {category.label}
             </button>
           ))}
-        </motion.div>
+        </div>
 
         {/* FAQ items */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-3xl mx-auto"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCategory}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="space-y-3"
-            >
-              {faqItems[activeCategory].map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-slate-300 transition-colors"
+        <div className="max-w-3xl mx-auto">
+          <div className="space-y-3">
+            {faqItems[activeCategory].map((item, index) => (
+              <div
+                key={index}
+                className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:border-slate-300 transition-colors"
+              >
+                <button
+                  onClick={() => toggleItem(index)}
+                  className="w-full p-5 flex items-center justify-between text-left"
                 >
-                  <button
-                    onClick={() => toggleItem(index)}
-                    className="w-full p-5 flex items-center justify-between text-left"
-                  >
-                    <span className="font-semibold text-slate-900 pr-4">{item.question}</span>
-                    <motion.div
-                      animate={{ rotate: openItems.includes(index) ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"
-                    >
-                      <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </motion.div>
-                  </button>
-                  
-                  <AnimatePresence>
-                    {openItems.includes(index) && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-5 pb-5 pt-0">
-                          <div className="h-px bg-slate-100 mb-4" />
-                          <p className="text-slate-600 leading-relaxed">{item.answer}</p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+                  <span className="font-medium text-slate-900 pr-4">{item.question}</span>
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center transition-transform ${
+                    openItems.includes(index) ? "rotate-180" : ""
+                  }`}>
+                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                  </div>
+                </button>
+                
+                {openItems.includes(index) && (
+                  <div className="px-5 pb-5 pt-0">
+                    <div className="h-px bg-slate-200 mb-4" />
+                    <p className="text-slate-600 leading-relaxed">{item.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Still have questions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-12 text-center"
-        >
-          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-white border border-slate-200">
+        <div className="mt-12 text-center">
+          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-slate-50 border border-slate-200">
             <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <HelpCircle className="w-6 h-6 text-blue-600" />
             </div>
             <div className="text-center sm:text-left">
-              <p className="font-semibold text-slate-900">Остались вопросы?</p>
+              <p className="font-medium text-slate-900">Остались вопросы?</p>
               <p className="text-sm text-slate-500">Напишите нам — ответим в течение пары часов</p>
             </div>
             <a
               href="https://t.me/webclinic"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all text-sm whitespace-nowrap"
+              className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap"
             >
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.308-.346-.11l-6.4 4.02-2.76-.918c-.6-.187-.612-.6.125-.89l10.782-4.156c.5-.18.94.12.78.878z"/>
@@ -242,7 +193,7 @@ export default function HomeFAQSection() {
               Написать в Telegram
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

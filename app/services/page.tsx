@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Услуги — WebClinic Solutions",
     description:
       "Веб-разработка, CRM/ERP системы, автоматизация бизнеса, API и интеграции. Полный цикл разработки под ключ.",
-    url: "https://WebClinic-solutions.dev/services",
+    url: "https://webclinic-solutions.dev/services",
   },
 };
 

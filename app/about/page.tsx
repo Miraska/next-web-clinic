@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "О компании — WebClinic Solutions",
     description:
       "Команда разработчиков, которая создаёт надёжные системы для бизнеса. Наши ценности и принципы работы.",
-    url: "https://WebClinic-solutions.dev/about",
+    url: "https://webclinic-solutions.dev/about",
   },
 };
 
