@@ -10,7 +10,7 @@ interface GlitchTextProps {
 export default function GlitchText({ 
   text, 
   className = "",
-  glitchColor = "#00ff88"
+  glitchColor = "#2563EB"
 }: GlitchTextProps) {
   const [isGlitching, setIsGlitching] = useState(false);
 
@@ -41,7 +41,7 @@ export default function GlitchText({
           <span 
             className="absolute top-0 left-0 z-0 opacity-70"
             style={{ 
-              color: '#ff0066',
+              color: '#0D9488',
               transform: 'translate(2px, 1px)',
               clipPath: 'inset(40% 0 20% 0)',
             }}

@@ -1,72 +1,65 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { Mail, MessageCircle, Phone, ArrowRight, Lock, FileText, Check, Clock } from "lucide-react";
 
+// Contact methods configuration
+const contactMethodsConfig = [
+  { id: "telegram", label: "Telegram", icon: MessageCircle, placeholder: "@username" },
+  { id: "phone", label: "Телефон", icon: Phone, placeholder: "+7 (___) ___-__-__" },
+  { id: "email", label: "Email", icon: Mail, placeholder: "email@example.com" },
+];
+
 export default function ContactComponent() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    phone: "",
-    projectType: "",
-    budget: "",
-    message: "",
+    contactMethod: "telegram",
+    contact: "",
+    task: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setSubmitStatus("success");
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      projectType: "",
-      budget: "",
-      message: "",
-    });
 
-    // Reset status after 5 seconds
-    setTimeout(() => setSubmitStatus("idle"), 5000);
+    // Simulate submission (как на главной)
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setIsSubmitting(false);
+    setIsSuccess(true);
+    setFormData({ name: "", contactMethod: "telegram", contact: "", task: "" });
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-
-  const projectTypes = [
-    { value: "", label: "Выберите тип проекта" },
-    { value: "landing", label: "Лендинг" },
-    { value: "website", label: "Сайт компании" },
-    { value: "ecommerce", label: "Интернет-магазин" },
-    { value: "webapp", label: "Веб-приложение" },
-    { value: "crm", label: "CRM / ERP система" },
-    { value: "chatbot", label: "Чат-бот" },
-    { value: "integration", label: "Интеграция / API" },
-    { value: "other", label: "Другое" },
-  ];
-
-  const budgetOptions = [
-    { value: "", label: "Примерный бюджет" },
-    { value: "50-100k", label: "50 000 – 100 000 ₽" },
-    { value: "100-250k", label: "100 000 – 250 000 ₽" },
-    { value: "250-500k", label: "250 000 – 500 000 ₽" },
-    { value: "500k+", label: "Более 500 000 ₽" },
-    { value: "unknown", label: "Затрудняюсь оценить" },
-  ];
 
   const contactInfo = [
     {
@@ -75,6 +68,7 @@ export default function ContactComponent() {
       value: "hello@webclinic.dev",
       href: "mailto:hello@webclinic.dev",
       description: "Ответим в течение рабочего дня",
+      accent: "blue",
     },
     {
       icon: MessageCircle,
@@ -82,6 +76,7 @@ export default function ContactComponent() {
       value: "@webclinic",
       href: "https://t.me/webclinic",
       description: "Быстрый ответ",
+      accent: "teal",
     },
     {
       icon: Phone,
@@ -89,69 +84,70 @@ export default function ContactComponent() {
       value: "+7 (495) 123-45-67",
       href: "tel:+74951234567",
       description: "Пн-Пт: 10:00-19:00 МСК",
+      accent: "blue",
     },
   ];
 
   const faqItems = [
     {
-      q: "Сколько стоит консультация?",
-      a: "Первая консультация и оценка проекта — бесплатно. Мы обсудим вашу задачу и предложим решение."
+      q: "Как определяется стоимость?",
+      a: "Стоимость рассчитывается индивидуально после анализа задачи и формирования технического задания."
     },
     {
       q: "Как быстро вы отвечаете?",
-      a: "В рабочее время — обычно в течение 2-4 часов. В другое время — на следующий рабочий день."
+      a: "В рабочее время ответ обычно в течение нескольких часов. В нерабочее время — на следующий рабочий день."
     },
     {
-      q: "Можно созвониться?",
-      a: "Да, предпочитаем созвоны для обсуждения проекта. Напишите — договоримся о времени."
+      q: "Возможен ли созвон?",
+      a: "Да, для детального обсуждения проекта проводим видеозвонки. Напишите для согласования времени."
     },
     {
-      q: "Работаете с регионами?",
-      a: "Да, работаем удалённо с клиентами из любого города. Все вопросы решаем онлайн."
+      q: "Работаете ли удалённо?",
+      a: "Да, работаем с клиентами из любых регионов. Коммуникация ведётся онлайн."
     },
     {
-      q: "Нужно ли ТЗ?",
-      a: "Не обязательно. Достаточно описать задачу своими словами — мы поможем структурировать."
+      q: "Требуется ли готовое ТЗ?",
+      a: "Не обязательно. Достаточно описать задачу — мы поможем сформировать техническое задание."
     },
   ];
 
   const trustBadges = [
-    { icon: Lock, text: "Данные защищены" },
-    { icon: FileText, text: "Работаем по договору" },
-    { icon: Check, text: "Без спама" },
+    { icon: Lock, text: "Данные защищены", accent: "blue" },
+    { icon: FileText, text: "Работаем по договору", accent: "teal" },
+    { icon: Check, text: "Без спама", accent: "blue" },
   ];
 
   return (
     <section ref={sectionRef} className="pt-28 lg:pt-32 pb-16 lg:pb-24 bg-white min-h-screen">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 lg:mb-16">
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
+        <div className={`text-center mb-12 lg:mb-16 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-100/50 text-blue-600 text-sm font-medium mb-4">
             Контакты
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
-            Обсудим <span className="text-blue-600">проект?</span>
+            Связаться{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">с нами</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Расскажите о вашей задаче — мы свяжемся в течение рабочего дня.
-            Консультация и оценка проекта бесплатны.
+            Расскажите о вашей задаче — мы свяжемся с вами в рабочее время для обсуждения деталей.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Contact Form */}
-          <div className="lg:col-span-7">
-            <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 shadow-lg">
-              {submitStatus === "success" ? (
+          <div className={`lg:col-span-7 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200 shadow-xl">
+              {isSuccess ? (
                 <div className="text-center py-12">
-                  <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
-                    <Check className="w-10 h-10 text-blue-600" />
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center mx-auto mb-6">
+                    <Check className="w-10 h-10 text-teal-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Заявка отправлена!</h3>
-                  <p className="text-slate-600 mb-6">Мы свяжемся с вами в ближайшее время.</p>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Заявка отправлена</h3>
+                  <p className="text-slate-600 mb-6">Мы свяжемся с вами в рабочее время.</p>
                   <button
-                    onClick={() => setSubmitStatus("idle")}
-                    className="text-blue-600 font-medium hover:text-blue-700"
+                    onClick={() => setIsSuccess(false)}
+                    className="text-blue-600 font-medium hover:text-blue-700 transition-colors"
                   >
                     Отправить ещё одну заявку
                   </button>
@@ -160,128 +156,99 @@ export default function ContactComponent() {
                 <>
                   <h2 className="text-xl lg:text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
                     <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-600"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-gradient-to-r from-blue-600 to-blue-800"></span>
                     </span>
                     Оставить заявку
                   </h2>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Имя <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
-                          placeholder="Как к вам обращаться?"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Email <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
-                          placeholder="email@company.ru"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Телефон или Telegram
-                        </label>
-                        <input
-                          type="text"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
-                          placeholder="+7... или @username"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Тип проекта
-                        </label>
-                        <select
-                          name="projectType"
-                          value={formData.projectType}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
-                        >
-                          {projectTypes.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
+                    {/* Name */}
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Примерный бюджет
+                        Ваше имя <span className="text-red-500">*</span>
                       </label>
-                      <select
-                        name="budget"
-                        value={formData.budget}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors"
-                      >
-                        {budgetOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Опишите задачу <span className="text-red-500">*</span>
-                      </label>
-                      <textarea
-                        name="message"
-                        value={formData.message}
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
                         onChange={handleChange}
                         required
-                        rows={5}
-                        className="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors resize-none"
-                        placeholder="Расскажите, что хотите сделать. Чем подробнее — тем точнее оценим."
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        placeholder="Как к вам обращаться?"
+                      />
+                    </div>
+
+                    {/* Contact Method Selection */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Как с вами связаться? <span className="text-red-500">*</span>
+                      </label>
+                      <div className="flex gap-2 mb-3">
+                        {contactMethodsConfig.map((method) => {
+                          const Icon = method.icon;
+                          const isSelected = formData.contactMethod === method.id;
+                          return (
+                            <button
+                              key={method.id}
+                              type="button"
+                              onClick={() => setFormData({ ...formData, contactMethod: method.id, contact: "" })}
+                              className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+                                isSelected
+                                  ? "bg-blue-50 border-blue-300 text-blue-700"
+                                  : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                              }`}
+                            >
+                              <Icon className="w-4 h-4" />
+                              <span className="hidden sm:inline">{method.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <input
+                        type={formData.contactMethod === "email" ? "email" : "text"}
+                        name="contact"
+                        value={formData.contact}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all"
+                        placeholder={contactMethodsConfig.find(m => m.id === formData.contactMethod)?.placeholder || ""}
+                      />
+                    </div>
+
+                    {/* Task Description — как на главной */}
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                        Опишите задачу
+                      </label>
+                      <textarea
+                        name="task"
+                        value={formData.task}
+                        onChange={handleChange}
+                        rows={4}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
+                        placeholder="Расскажите подробнее о вашем проекте, целях и пожеланиях..."
                       />
                     </div>
 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-3.5 px-8 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                      className="w-full py-3.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-blue-600/30"
                       data-cta="contact-form-submit"
                     >
                       {isSubmitting ? (
                         <>
-                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                           </svg>
-                          Отправка...
+                          Отправляем...
                         </>
                       ) : (
                         <>
                           Отправить заявку
-                          <ArrowRight className="ml-2 w-5 h-5" />
+                          <ArrowRight className="w-4 h-4" />
                         </>
                       )}
                     </button>
@@ -299,24 +266,33 @@ export default function ContactComponent() {
           </div>
 
           {/* Contact Info & FAQ */}
-          <div className="lg:col-span-5">
+          <div className={`lg:col-span-5 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="space-y-5">
               {/* Quick Contact */}
-              <div className="p-6 rounded-2xl bg-blue-50 border border-blue-100">
+              <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-100/50">
                 <h3 className="text-lg font-bold text-slate-900 mb-4">Быстрая связь</h3>
                 <div className="space-y-3">
                   {contactInfo.map((item, index) => {
                     const IconComponent = item.icon;
+                    const isBlue = item.accent === "blue";
                     return (
                       <a
                         key={index}
                         href={item.href}
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        className="flex items-center gap-4 p-3 rounded-xl bg-white border border-blue-100 hover:border-blue-200 hover:shadow-sm transition-all group"
+                        className="flex items-center gap-4 p-3 rounded-xl bg-white border border-slate-100 hover:border-blue-200 hover:shadow-lg transition-all group"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                          <IconComponent className="w-5 h-5 text-blue-600" />
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                          isBlue 
+                            ? "bg-blue-100 group-hover:bg-blue-600" 
+                            : "bg-teal-100 group-hover:bg-teal-600"
+                        }`}>
+                          <IconComponent className={`w-5 h-5 transition-colors ${
+                            isBlue 
+                              ? "text-blue-600 group-hover:text-white" 
+                              : "text-teal-600 group-hover:text-white"
+                          }`} />
                         </div>
                         <div className="flex-1">
                           <div className="text-sm text-slate-400">{item.label}</div>
@@ -332,7 +308,7 @@ export default function ContactComponent() {
               {/* Response time */}
               <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200">
                 <div className="flex items-center gap-3 mb-2">
-                  <Clock className="w-5 h-5 text-blue-600" />
+                  <Clock className="w-5 h-5 text-teal-600" />
                   <span className="text-sm font-medium text-slate-900">Время ответа</span>
                 </div>
                 <p className="text-slate-600 text-sm">
@@ -357,9 +333,10 @@ export default function ContactComponent() {
               <div className="flex flex-wrap gap-3 justify-center">
                 {trustBadges.map((badge, index) => {
                   const IconComponent = badge.icon;
+                  const isBlue = badge.accent === "blue";
                   return (
-                    <div key={index} className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600">
-                      <IconComponent className="w-4 h-4 text-blue-600" />
+                    <div key={index} className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-sm text-slate-600">
+                      <IconComponent className={`w-4 h-4 ${isBlue ? "text-blue-600" : "text-teal-600"}`} />
                       <span>{badge.text}</span>
                     </div>
                   );

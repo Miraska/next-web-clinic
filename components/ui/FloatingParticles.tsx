@@ -23,7 +23,7 @@ interface FloatingParticlesProps {
 
 export default function FloatingParticles({
   count = 50,
-  colors = ["#00ff88", "#00d4ff", "#8b5cf6"],
+  colors = ["#2563EB", "#0D9488", "#3B82F6"],
   minSize = 2,
   maxSize = 6,
   speed = 0.5,

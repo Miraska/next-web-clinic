@@ -1,18 +1,47 @@
 "use client";
-import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import Image from "next/image";
+import { useRef, useState, useEffect } from "react";
 import ConsultationModal from "@/components/ui/ConsultationModal";
 import { projectsData } from "@/lib/projects";
+import { ArrowRight, ChevronDown, Clock, Building2, Check, X } from "lucide-react";
 
 interface ProjectDetailProps {
   slug: string;
 }
 
+// Project-specific hero images
+const projectImages: Record<string, string> = {
+  "crm-logistics": "/projects/crm.jpg",
+  "ecommerce-platform": "/projects/ecommerce.jpg",
+  "hr-portal": "/projects/hr.jpg",
+  "booking-system": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80",
+  "analytics-dashboard": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80",
+  "telegram-bot-school": "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=1920&q=80",
+  "api-integration": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80",
+};
+
 export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const project = projectsData[slug];
 
@@ -30,88 +59,113 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
     );
   }
 
+  // Unified color scheme - only blue and teal
   const colorClasses: Record<string, { bg: string; text: string; light: string; border: string }> = {
     blue: { bg: "bg-blue-100", text: "text-blue-600", light: "bg-blue-50", border: "border-blue-200" },
-    emerald: { bg: "bg-emerald-100", text: "text-emerald-600", light: "bg-emerald-50", border: "border-emerald-200" },
-    violet: { bg: "bg-violet-100", text: "text-violet-600", light: "bg-violet-50", border: "border-violet-200" },
-    cyan: { bg: "bg-cyan-100", text: "text-cyan-600", light: "bg-cyan-50", border: "border-cyan-200" },
+    teal: { bg: "bg-teal-100", text: "text-teal-600", light: "bg-teal-50", border: "border-teal-200" },
   };
 
-  const colors = colorClasses[project.color] || colorClasses.blue;
+  // Map any color to blue or teal for consistency
+  const getColorKey = (color: string): string => {
+    const tealColors = ['emerald', 'teal', 'cyan'];
+    return tealColors.includes(color) ? 'teal' : 'blue';
+  };
+
+  const colors = colorClasses[getColorKey(project.color)] || colorClasses.blue;
+  const heroImage = projectImages[slug] || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80";
 
   return (
     <>
-      <section ref={sectionRef} className="pt-28 lg:pt-32 pb-16 lg:pb-24 bg-white">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
-          {/* Breadcrumbs */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            className="mb-8"
-          >
-            <nav className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-slate-400 hover:text-slate-600">Главная</Link>
-              <span className="text-slate-300">/</span>
-              <Link href="/projects" className="text-slate-400 hover:text-slate-600">Проекты</Link>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-900">{project.title}</span>
+      <section ref={sectionRef} className="min-h-screen">
+        {/* Hero Section with Project Image */}
+        <div className="relative pt-28 lg:pt-32 pb-16 lg:pb-20 overflow-hidden">
+          <div className="absolute inset-0">
+            <Image
+              src={heroImage}
+              alt={project.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-slate-900/85" />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 to-slate-900/95" />
+          </div>
+          
+          <div className="max-w-[1280px] mx-auto px-6 lg:px-8 relative">
+            {/* Breadcrumbs */}
+            <nav className={`flex items-center gap-2 text-sm mb-8 transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+              <Link href="/" className="text-slate-400 hover:text-white transition-colors">Главная</Link>
+              <span className="text-slate-500">/</span>
+              <Link href="/projects" className="text-slate-400 hover:text-white transition-colors">Проекты</Link>
+              <span className="text-slate-500">/</span>
+              <span className="text-white">{project.title}</span>
             </nav>
-          </motion.div>
 
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mb-12 lg:mb-16"
-          >
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className={`px-4 py-1.5 rounded-full ${colors.light} ${colors.text} text-sm font-medium`}>
-                {project.category}
-              </span>
-              <span className="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm">
-                {project.industry}
-              </span>
-              <span className="text-sm text-slate-400">{project.timeline}</span>
+            {/* Header */}
+            <div className={`max-w-3xl transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <span className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-medium border border-white/20">
+                  {project.category}
+                </span>
+                <span className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm text-white/80 text-sm border border-white/10 flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5" />
+                  {project.industry}
+                </span>
+                <span className="text-slate-400 text-sm flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  {project.timeline}
+                </span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                {project.title}
+              </h1>
+              <p className="text-xl text-slate-300 mb-8">
+                {project.description}
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all hover:shadow-lg hover:shadow-blue-600/25"
+                  data-cta={`project-${slug}-hero`}
+                >
+                  Хочу такой же
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </button>
+                <Link
+                  href="#results"
+                  className="inline-flex items-center px-6 py-3 border border-white/30 text-white font-medium rounded-xl hover:bg-white/10 transition-all"
+                >
+                  Смотреть результаты
+                  <ChevronDown className="ml-2 w-4 h-4" />
+                </Link>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
-              {project.title}
-            </h1>
-            <p className="text-xl text-slate-600 max-w-3xl">
-              {project.description}
-            </p>
-          </motion.div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div id="results" className="bg-white py-16 lg:py-24">
+          <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
 
           {/* Results highlight */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 lg:mb-16"
-          >
+          <div className={`grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 lg:mb-16 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             {project.results.map((result, index) => (
               <div key={index} className={`p-5 rounded-2xl ${colors.light} border ${colors.border}`}>
-                <div className={`text-3xl lg:text-4xl font-bold ${colors.text} mb-1`}>{result.metric}</div>
                 <div className="font-semibold text-slate-900 mb-1">{result.value}</div>
                 <div className="text-sm text-slate-500">{result.description}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
 
-          {/* Challenge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="mb-12 lg:mb-16"
-          >
+          {/* Challenge & Solution */}
+          <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="grid lg:grid-cols-2 gap-8">
-              <div className="p-6 lg:p-8 rounded-2xl bg-red-50 border border-red-100">
+              <div className="p-6 lg:p-8 rounded-2xl bg-slate-50 border border-slate-200">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
+                  <div className="w-10 h-10 rounded-xl bg-slate-200 flex items-center justify-center">
+                    <X className="w-5 h-5 text-slate-600" />
                   </div>
                   <h2 className="text-xl font-bold text-slate-900">Проблема</h2>
                 </div>
@@ -120,9 +174,7 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                 <ul className="space-y-2">
                   {project.challenge.problems.map((problem, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                      <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      <X className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
                       {problem}
                     </li>
                   ))}
@@ -132,9 +184,7 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
               <div className={`p-6 lg:p-8 rounded-2xl ${colors.light} border ${colors.border}`}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`w-10 h-10 rounded-xl ${colors.bg} flex items-center justify-center`}>
-                    <svg className={`w-5 h-5 ${colors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <Check className={`w-5 h-5 ${colors.text}`} />
                   </div>
                   <h2 className="text-xl font-bold text-slate-900">Решение</h2>
                 </div>
@@ -143,38 +193,24 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                 <ul className="space-y-2">
                   {project.solution.features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                      <svg className={`w-4 h-4 ${colors.text} shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <Check className={`w-4 h-4 ${colors.text} shrink-0 mt-0.5`} />
                       {feature}
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Process Timeline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-12 lg:mb-16"
-          >
+          <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Процесс работы над проектом</h2>
             <div className="relative">
               {/* Timeline line */}
-              <div className="hidden lg:block absolute top-8 left-0 right-0 h-1 bg-slate-200 rounded-full" />
               
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {project.process.map((step, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                    className="relative"
-                  >
+                  <div key={index} className="relative">
                     {/* Step number */}
                     <div className={`hidden lg:flex absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full ${colors.bg} ${colors.text} items-center justify-center text-sm font-bold z-10`}>
                       {step.step}
@@ -188,19 +224,14 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                       <h3 className="font-bold text-slate-900 mb-2">{step.title}</h3>
                       <p className="text-sm text-slate-500">{step.description}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Technologies */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="mb-12 lg:mb-16"
-          >
+          <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Использованные технологии</h2>
             <div className="flex flex-wrap gap-3">
               {project.technologies.map((tech, index) => (
@@ -212,16 +243,11 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                 </span>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Testimonial */}
           {project.testimonial && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mb-12 lg:mb-16"
-            >
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               <div className="p-8 lg:p-10 rounded-2xl bg-slate-50 border border-slate-200">
                 <svg className="w-10 h-10 text-slate-300 mb-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
@@ -239,47 +265,55 @@ export default function ProjectDetailComponent({ slug }: ProjectDetailProps) {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.35 }}
-          >
-            <div className="p-8 lg:p-10 rounded-2xl bg-linear-to-r from-blue-600 to-blue-700 text-white">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                <div>
-                  <h3 className="text-2xl font-bold mb-2">
-                    Хотите похожий результат?
-                  </h3>
-                  <p className="text-blue-100 max-w-xl">
-                    Расскажите о вашей задаче — мы предложим решение и покажем, 
-                    как можем помочь именно вам.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-200 whitespace-nowrap"
-                    data-cta={`project-${slug}-consultation`}
-                  >
-                    Обсудить проект
-                    <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </button>
-                  <Link
-                    href="/projects"
-                    className="inline-flex items-center justify-center px-6 py-4 border border-white/30 text-white font-medium rounded-xl hover:bg-white/10 transition-all whitespace-nowrap"
-                  >
-                    ← Все проекты
-                  </Link>
+          <div className={`transition-all duration-700 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="relative overflow-hidden rounded-2xl">
+              <div className="absolute inset-0">
+                <Image
+                  src={heroImage}
+                  alt="Background"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-slate-900/88" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-teal-900/20" />
+              </div>
+              
+              <div className="relative p-8 lg:p-10">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      Хотите похожий результат?
+                    </h3>
+                    <p className="text-slate-300 max-w-xl">
+                      Расскажите о вашей задаче — мы предложим решение и покажем, 
+                      как можем помочь именно вам.
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="inline-flex items-center justify-center px-6 py-3.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-500 transition-all hover:shadow-lg hover:shadow-blue-600/30 whitespace-nowrap"
+                      data-cta={`project-${slug}-consultation`}
+                    >
+                      Связаться
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </button>
+                    <Link
+                      href="/projects"
+                      className="inline-flex items-center justify-center px-6 py-3.5 border border-white/20 text-white font-medium rounded-xl hover:bg-white/10 transition-all whitespace-nowrap"
+                    >
+                      ← Все проекты
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
+          </div>
         </div>
       </section>
 

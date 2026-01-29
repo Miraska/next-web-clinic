@@ -27,9 +27,9 @@ export default function ProcessTimeline({ steps }: ProcessTimelineProps) {
   return (
     <div ref={containerRef} className="relative">
       {/* Center line */}
-      <div className="absolute left-8 lg:left-1/2 lg:-translate-x-px top-0 bottom-0 w-0.5 bg-[#1f2937]">
+      <div className="absolute left-8 lg:left-1/2 lg:-translate-x-px top-0 bottom-0 w-0.5 bg-slate-200">
         <motion.div
-          className="w-full bg-gradient-to-b from-[#00ff88] to-[#00d4ff]"
+          className="w-full bg-gradient-to-b from-blue-600 to-teal-600"
           style={{ height: lineHeight }}
         />
       </div>
@@ -76,7 +76,7 @@ function TimelineItem({ step, index, isEven }: { step: TimelineStep; index: numb
           className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold shadow-lg"
           style={{ 
             backgroundColor: step.color,
-            color: "#0a0e17",
+            color: "#ffffff",
             boxShadow: `0 0 30px ${step.color}40`,
           }}
         >
@@ -90,7 +90,7 @@ function TimelineItem({ step, index, isEven }: { step: TimelineStep; index: numb
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="p-6 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-300 group"
+          className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 transition-all duration-300 group shadow-sm"
         >
           {/* Icon */}
           <div 
@@ -101,21 +101,21 @@ function TimelineItem({ step, index, isEven }: { step: TimelineStep; index: numb
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#00ff88] transition-colors">
+          <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
             {step.title}
           </h3>
 
           {/* Description */}
-          <p className="text-white/60 leading-relaxed mb-4">
+          <p className="text-slate-600 leading-relaxed mb-4">
             {step.description}
           </p>
 
           {/* Duration */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0a0e17] border border-[#1f2937]">
-            <svg className="w-4 h-4 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200">
+            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="text-sm text-white/60">{step.duration}</span>
+            <span className="text-sm text-slate-600">{step.duration}</span>
           </div>
         </motion.div>
       </div>

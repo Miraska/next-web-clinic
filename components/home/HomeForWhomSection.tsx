@@ -46,7 +46,7 @@ export default function HomeForWhomSection() {
     {
       icon: MessageSquare,
       text: "Готовы к диалогу",
-      subtext: "Лучшие проекты рождаются в сотрудничестве — ваша экспертиза + наш опыт"
+      subtext: "Совместная работа — ваша экспертиза + наш опыт"
     },
     {
       icon: Rocket,
@@ -245,7 +245,7 @@ export default function HomeForWhomSection() {
                   <p className="text-slate-600 max-w-xl">
                     Это нормальная ситуация. Расскажите о бизнесе и целях — 
                     поможем разобраться, какой инструмент решит вашу задачу лучше всего.
-                    Первая консультация бесплатная.
+                  
                   </p>
                 </div>
               </div>
@@ -255,7 +255,7 @@ export default function HomeForWhomSection() {
                   className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
                   data-cta="for-whom-consultation"
                 >
-                  Получить консультацию
+                  Связаться
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </button>
                 <a

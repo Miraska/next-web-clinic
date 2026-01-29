@@ -1,19 +1,50 @@
 "use client";
-import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import Image from "next/image";
+import { useRef, useState, useEffect } from "react";
 import ConsultationModal from "@/components/ui/ConsultationModal";
 import { servicesData } from "@/lib/services";
+import { ArrowRight, ChevronDown, Check } from "lucide-react";
 
 interface ServiceDetailProps {
   slug: string;
 }
 
+// Service-specific hero images
+const serviceImages: Record<string, string> = {
+  "web-development": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80",
+  "ecommerce": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&q=80",
+  "web-apps": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80",
+  "crm-erp": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&q=80",
+  "chatbots": "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=1920&q=80",
+  "api-integrations": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1920&q=80",
+  "seo": "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=1920&q=80",
+  "support": "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1920&q=80",
+  "automation": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1920&q=80",
+};
+
 export default function ServiceDetailComponent({ slug }: ServiceDetailProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const service = servicesData[slug];
 
@@ -31,249 +62,248 @@ export default function ServiceDetailComponent({ slug }: ServiceDetailProps) {
     );
   }
 
+  // Unified color scheme - only blue and teal
   const colorClasses: Record<string, { bg: string; text: string; light: string; border: string }> = {
     blue: { bg: "bg-blue-100", text: "text-blue-600", light: "bg-blue-50", border: "border-blue-200" },
-    emerald: { bg: "bg-emerald-100", text: "text-emerald-600", light: "bg-emerald-50", border: "border-emerald-200" },
-    violet: { bg: "bg-violet-100", text: "text-violet-600", light: "bg-violet-50", border: "border-violet-200" },
-    orange: { bg: "bg-orange-100", text: "text-orange-600", light: "bg-orange-50", border: "border-orange-200" },
-    cyan: { bg: "bg-cyan-100", text: "text-cyan-600", light: "bg-cyan-50", border: "border-cyan-200" },
-    rose: { bg: "bg-rose-100", text: "text-rose-600", light: "bg-rose-50", border: "border-rose-200" },
-    amber: { bg: "bg-amber-100", text: "text-amber-600", light: "bg-amber-50", border: "border-amber-200" },
-    slate: { bg: "bg-slate-200", text: "text-slate-600", light: "bg-slate-50", border: "border-slate-200" },
+    teal: { bg: "bg-teal-100", text: "text-teal-600", light: "bg-teal-50", border: "border-teal-200" },
   };
 
-  const colors = colorClasses[service.color] || colorClasses.blue;
+  // Map any color to blue or teal for consistency
+  const getColorKey = (color: string): string => {
+    const tealColors = ['emerald', 'teal', 'cyan'];
+    return tealColors.includes(color) ? 'teal' : 'blue';
+  };
+
+  const colors = colorClasses[getColorKey(service.color)] || colorClasses.blue;
+  const heroImage = serviceImages[slug] || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80";
 
   return (
     <>
-      <section ref={sectionRef} className="pt-28 lg:pt-32 pb-16 lg:pb-24 bg-white">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
-          {/* Breadcrumbs */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            className="mb-8"
-          >
-            <nav className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-slate-400 hover:text-slate-600">Главная</Link>
-              <span className="text-slate-300">/</span>
-              <Link href="/services" className="text-slate-400 hover:text-slate-600">Услуги</Link>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-900">{service.title}</span>
+      <section ref={sectionRef} className="min-h-screen">
+        {/* Hero Section with Background Image */}
+        <div className="relative pt-28 lg:pt-32 pb-16 lg:pb-20 overflow-hidden">
+          <div className="absolute inset-0">
+            <Image
+              src={heroImage}
+              alt={service.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-slate-900/80" />
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 to-slate-900/90" />
+          </div>
+          
+          <div className="max-w-[1280px] mx-auto px-6 lg:px-8 relative">
+            {/* Breadcrumbs */}
+            <nav className={`flex items-center gap-2 text-sm mb-8 transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+              <Link href="/" className="text-slate-400 hover:text-white transition-colors">Главная</Link>
+              <span className="text-slate-500">/</span>
+              <Link href="/services" className="text-slate-400 hover:text-white transition-colors">Услуги</Link>
+              <span className="text-slate-500">/</span>
+              <span className="text-white">{service.title}</span>
             </nav>
-          </motion.div>
 
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mb-12 lg:mb-16"
-          >
-            <span className={`inline-block px-4 py-2 rounded-full ${colors.light} ${colors.text} text-sm font-medium mb-4`}>
-              Услуга
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-4">
-              {service.title}
-            </h1>
-            <p className="text-xl text-slate-600 max-w-3xl mb-6">
-              {service.subtitle}
-            </p>
-            <p className="text-slate-500 max-w-3xl">
-              {service.description}
-            </p>
-          </motion.div>
-
-          {/* Who is for */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Кому подходит</h2>
-            <div className="grid md:grid-cols-3 gap-5">
-              {service.whoIsFor.map((item, index) => (
-                <div key={index} className={`p-6 rounded-2xl ${colors.light} border ${colors.border}`}>
-                  <h3 className="font-bold text-slate-900 mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-600">{item.description}</p>
-                </div>
-              ))}
+            {/* Header */}
+            <div className={`max-w-3xl transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <span className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-medium mb-6 border border-white/20">
+                Услуга
+              </span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                {service.title}
+              </h1>
+              <p className="text-xl text-slate-300 mb-8">
+                {service.subtitle}
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all hover:shadow-lg hover:shadow-blue-600/25"
+                  data-cta={`service-${slug}-hero`}
+                >
+                  Связаться
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </button>
+                <Link
+                  href="#details"
+                  className="inline-flex items-center px-6 py-3 border border-white/30 text-white font-medium rounded-xl hover:bg-white/10 transition-all"
+                >
+                  Подробнее
+                  <ChevronDown className="ml-2 w-4 h-4" />
+                </Link>
+              </div>
             </div>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Tasks */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Какие задачи решает</h2>
-            <div className="grid md:grid-cols-2 gap-5">
-              {service.tasks.map((task, index) => (
-                <div key={index} className="flex items-start gap-4 p-5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className={`w-10 h-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-900 mb-1">{task.title}</h3>
-                    <p className="text-sm text-slate-500">{task.description}</p>
-                  </div>
-                </div>
-              ))}
+        {/* Main Content */}
+        <div id="details" className="bg-white py-16 lg:py-24">
+          <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
+            {/* Description */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <p className="text-lg text-slate-600 max-w-3xl">
+                {service.description}
+              </p>
             </div>
-          </motion.div>
 
-          {/* What's included */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Что входит</h2>
-            <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200">
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {service.includes.map((item, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <svg className={`w-5 h-5 ${colors.text} shrink-0`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-slate-700">{item}</span>
+            {/* Who is for */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Кому подходит</h2>
+              <div className="grid md:grid-cols-3 gap-5">
+                {service.whoIsFor.map((item, index) => (
+                  <div key={index} className={`p-6 rounded-2xl ${colors.light} border ${colors.border}`}>
+                    <h3 className="font-bold text-slate-900 mb-2">{item.title}</h3>
+                    <p className="text-sm text-slate-600">{item.description}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </motion.div>
 
-          {/* Process */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Как мы работаем</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {service.process.map((step, index) => (
-                <div key={index} className="p-5 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className={`text-2xl font-bold ${colors.text} mb-2`}>{step.step}</div>
-                  <h3 className="font-bold text-slate-900 mb-1">{step.title}</h3>
-                  <p className="text-sm text-slate-500">{step.description}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Pricing */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Стоимость</h2>
-            <div className="grid md:grid-cols-3 gap-5">
-              {service.pricing.map((plan, index) => (
-                <div key={index} className="p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg hover:border-slate-300 transition-all">
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">{plan.name}</h3>
-                  <div className={`text-2xl font-bold ${colors.text} mb-2`}>{plan.price}</div>
-                  <p className="text-sm text-slate-500 mb-4">{plan.description}</p>
-                  <div className="space-y-2">
-                    {plan.features.map((feature, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-slate-600">
-                        <svg className={`w-4 h-4 ${colors.text}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-slate-400 mt-4 text-center">
-              Цены ориентировочные. Точная стоимость — после обсуждения задачи.
-            </p>
-          </motion.div>
-
-          {/* FAQ */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="mb-12 lg:mb-16"
-          >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Частые вопросы</h2>
-            <div className="space-y-3">
-              {service.faq.map((item, index) => (
-                <div key={index} className="rounded-xl border border-slate-200 overflow-hidden">
-                  <button
-                    onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                    className="w-full p-5 flex items-center justify-between text-left bg-white hover:bg-slate-50 transition-colors"
-                  >
-                    <span className="font-semibold text-slate-900 pr-4">{item.question}</span>
-                    <motion.div
-                      animate={{ rotate: openFaq === index ? 180 : 0 }}
-                      className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0"
-                    >
-                      <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </motion.div>
-                  </button>
-                  {openFaq === index && (
-                    <div className="px-5 pb-5">
-                      <div className="h-px bg-slate-100 mb-4" />
-                      <p className="text-slate-600">{item.answer}</p>
+            {/* Tasks */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Какие задачи решает</h2>
+              <div className="grid md:grid-cols-2 gap-5">
+                {service.tasks.map((task, index) => (
+                  <div key={index} className="flex items-start gap-4 p-5 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className={`w-10 h-10 rounded-xl ${colors.bg} ${colors.text} flex items-center justify-center shrink-0`}>
+                      <Check className="w-5 h-5" />
                     </div>
-                  )}
-                </div>
-              ))}
+                    <div>
+                      <h3 className="font-bold text-slate-900 mb-1">{task.title}</h3>
+                      <p className="text-sm text-slate-500">{task.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </motion.div>
 
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <div className={`p-8 lg:p-10 rounded-2xl ${colors.light} border ${colors.border}`}>
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                    Готовы обсудить проект?
-                  </h3>
-                  <p className="text-slate-600 max-w-xl">
-                    Расскажите о задаче — мы предложим решение и посчитаем стоимость.
-                    Консультация бесплатная.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center justify-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-600/20 whitespace-nowrap"
-                    data-cta={`service-${slug}-consultation`}
-                  >
-                    Обсудить проект
-                    <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </button>
-                  <Link
-                    href="/services"
-                    className="inline-flex items-center justify-center px-6 py-4 border border-slate-200 bg-white text-slate-700 font-medium rounded-xl hover:border-blue-400 hover:text-blue-600 transition-all whitespace-nowrap"
-                  >
-                    ← Все услуги
-                  </Link>
+            {/* What's included */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Что входит</h2>
+              <div className="p-6 lg:p-8 rounded-2xl bg-white border border-slate-200">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {service.includes.map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <Check className={`w-5 h-5 ${colors.text} shrink-0`} />
+                      <span className="text-slate-700">{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </motion.div>
+
+            {/* Process */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Как мы работаем</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {service.process.map((step, index) => (
+                  <div key={index} className="p-5 rounded-xl bg-slate-50 border border-slate-200 hover:shadow-md transition-all">
+                    <div className={`text-2xl font-bold ${colors.text} mb-2`}>{step.step}</div>
+                    <h3 className="font-bold text-slate-900 mb-1">{step.title}</h3>
+                    <p className="text-sm text-slate-500">{step.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Pricing */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Стоимость</h2>
+              <div className="grid md:grid-cols-3 gap-5">
+                {service.pricing.map((plan, index) => (
+                  <div key={index} className="p-6 rounded-2xl bg-white border border-slate-200 hover:shadow-lg hover:border-slate-300 transition-all">
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">{plan.name}</h3>
+                    <div className={`text-2xl font-bold ${colors.text} mb-2`}>{plan.price}</div>
+                    <p className="text-sm text-slate-500 mb-4">{plan.description}</p>
+                    <div className="space-y-2">
+                      {plan.features.map((feature, i) => (
+                        <div key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                          <Check className={`w-4 h-4 ${colors.text}`} />
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-slate-400 mt-4 text-center">
+                Цены ориентировочные. Точная стоимость — после обсуждения задачи.
+              </p>
+            </div>
+
+            {/* FAQ */}
+            <div className={`mb-12 lg:mb-16 transition-all duration-700 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h2 className="text-2xl font-bold text-slate-900 mb-6">Частые вопросы</h2>
+              <div className="space-y-3">
+                {service.faq.map((item, index) => (
+                  <div key={index} className="rounded-xl border border-slate-200 overflow-hidden">
+                    <button
+                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                      className="w-full p-5 flex items-center justify-between text-left bg-white hover:bg-slate-50 transition-colors"
+                    >
+                      <span className="font-semibold text-slate-900 pr-4">{item.question}</span>
+                      <div className={`w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 transition-transform ${openFaq === index ? 'rotate-180' : ''}`}>
+                        <ChevronDown className="w-4 h-4 text-slate-500" />
+                      </div>
+                    </button>
+                    <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-96' : 'max-h-0'}`}>
+                      <div className="px-5 pb-5">
+                        <div className="h-px bg-slate-100 mb-4" />
+                        <p className="text-slate-600">{item.answer}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className={`transition-all duration-700 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="relative overflow-hidden rounded-2xl">
+                <div className="absolute inset-0">
+                  <Image
+                    src={heroImage}
+                    alt="Background"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-slate-900/88" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-teal-900/20" />
+                </div>
+                
+                <div className="relative p-8 lg:p-10">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white mb-2">
+                        Готовы обсудить проект?
+                      </h3>
+                      <p className="text-slate-300 max-w-xl">
+                        Расскажите о задаче — мы предложим решение и посчитаем стоимость.
+                      
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="inline-flex items-center justify-center px-6 py-3.5 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-500 transition-all hover:shadow-lg hover:shadow-blue-600/30 whitespace-nowrap"
+                        data-cta={`service-${slug}-consultation`}
+                      >
+                        Связаться
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </button>
+                      <Link
+                        href="/services"
+                        className="inline-flex items-center justify-center px-6 py-3.5 border border-white/20 text-white font-medium rounded-xl hover:bg-white/10 transition-all whitespace-nowrap"
+                      >
+                        ← Все услуги
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

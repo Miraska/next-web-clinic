@@ -300,7 +300,7 @@ export default function ChatWidget() {
                     <p className="text-slate-500 text-xs px-1">Быстрые действия:</p>
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        "Обсудить проект",
+                        "Связаться",
                         "Узнать стоимость",
                         "Посмотреть кейсы",
                         "Связаться с нами",

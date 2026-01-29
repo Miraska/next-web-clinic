@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import Image from "next/image";
+import { useRef, useState, useEffect } from "react";
 import {
   Globe,
   ShoppingCart,
@@ -15,121 +16,190 @@ import {
 export default function HomeWhatWeDoSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const services = [
     {
       icon: Globe,
-      problem: "Нет сайта или старый сайт не работает на вас",
+      problem: "Требуется представительство компании в интернете",
       solution: "Сайты и лендинги",
-      description: "Создадим современный сайт, который будет привлекать клиентов, показывать вашу экспертизу и удобно работать на всех устройствах.",
+      description: "Разрабатываем сайты разной сложности: от одностраничных лендингов до корпоративных порталов с системой управления контентом.",
       tasks: [
-        "Сайт-визитка для компании или специалиста",
-        "Лендинг для продукта или услуги",
-        "Корпоративный сайт с блогом",
-        "Многостраничный информационный портал",
+        "Корпоративные сайты",
+        "Лендинги для продуктов и услуг",
+        "Информационные порталы",
+        "Сайты-визитки",
       ],
       includes: ["Адаптивный дизайн", "SEO-основа", "Админ-панель", "Формы заявок", "Аналитика"],
-      price: "от 50 000 ₽",
+      price: "По запросу",
       duration: "2-6 недель",
       slug: "web-development",
+      accent: "blue",
     },
     {
       icon: ShoppingCart,
-      problem: "Хотите продавать онлайн, но не знаете с чего начать",
+      problem: "Необходима платформа для онлайн-продаж",
       solution: "Интернет-магазины",
-      description: "Создадим удобный интернет-магазин с каталогом, корзиной, оплатой и доставкой. Интегрируем с вашей учётной системой.",
+      description: "Разрабатываем интернет-магазины с каталогом, системой оплаты и доставки. Выполняем интеграцию с учётными системами.",
       tasks: [
-        "Магазин с каталогом и корзиной",
-        "Интеграция с платёжными системами",
+        "Каталог с фильтрами и поиском",
+        "Интеграция платёжных систем",
         "Личный кабинет покупателя",
-        "Синхронизация с 1С и складом",
+        "Синхронизация с 1С",
       ],
       includes: ["Каталог товаров", "Онлайн-оплата", "Доставка", "Личный кабинет", "Управление заказами"],
-      price: "от 250 000 ₽",
-      duration: "6-12 недель",
+      price: "По запросу",
+      duration: "2-4 месяца",
       slug: "ecommerce",
+      accent: "teal",
     },
     {
       icon: Monitor,
-      problem: "Нужен сложный сервис с нестандартным функционалом",
+      problem: "Нужен сервис с нестандартным функционалом",
       solution: "Веб-приложения",
-      description: "Разработаем веб-приложение под вашу бизнес-задачу: личные кабинеты, сервисы бронирования, калькуляторы, SaaS-продукты.",
+      description: "Разрабатываем веб-приложения под конкретные бизнес-задачи: личные кабинеты, системы бронирования, внутренние порталы.",
       tasks: [
-        "Личные кабинеты для клиентов",
-        "Системы бронирования и записи",
-        "Онлайн-калькуляторы и конфигураторы",
-        "SaaS-продукты и стартапы",
+        "Личные кабинеты клиентов",
+        "Системы бронирования",
+        "Онлайн-калькуляторы",
+        "SaaS-продукты",
       ],
       includes: ["Авторизация", "Личный кабинет", "API", "Уведомления", "Отчёты"],
-      price: "от 300 000 ₽",
+      price: "По запросу",
       duration: "2-4 месяца",
       slug: "web-apps",
+      accent: "blue",
     },
     {
       icon: Database,
-      problem: "Хаос в заявках, Excel-таблицы, менеджеры теряют клиентов",
+      problem: "Данные хранятся в разных местах, нет единой системы",
       solution: "CRM/ERP системы",
-      description: "Создадим систему под ваши процессы: учёт клиентов, сделок, задач. Соберём все данные в одном месте, настроим отчёты.",
+      description: "Разрабатываем системы управления под ваши процессы: учёт клиентов, сделок, задач. Объединяем данные в одном месте.",
       tasks: [
         "Управление клиентами и сделками",
-        "Воронки продаж и аналитика",
-        "Складской учёт и логистика",
-        "Управление проектами и задачами",
+        "Воронки продаж",
+        "Складской учёт",
+        "Управление задачами",
       ],
       includes: ["База клиентов", "Воронка продаж", "Задачи", "Отчёты", "Интеграции"],
-      price: "от 400 000 ₽",
+      price: "По запросу",
       duration: "3-5 месяцев",
       slug: "crm-erp",
+      accent: "teal",
     },
     {
       icon: MessageSquare,
-      problem: "Менеджеры тратят время на однотипные вопросы клиентов",
+      problem: "Требуется автоматизация коммуникации с клиентами",
       solution: "Чат-боты",
-      description: "Создадим бота для сайта, Telegram или WhatsApp. Автоматизируем ответы на частые вопросы, приём заявок, запись на услуги.",
+      description: "Разрабатываем ботов для Telegram, WhatsApp и сайта. Автоматизируем ответы на типовые вопросы, приём заявок, запись на услуги.",
       tasks: [
-        "Бот для ответов на частые вопросы",
-        "Приём заявок и заказов",
-        "Запись на услуги и бронирование",
-        "Уведомления и рассылки",
+        "Ответы на типовые вопросы",
+        "Приём заявок",
+        "Запись на услуги",
+        "Уведомления",
       ],
       includes: ["Сценарии диалогов", "Интеграция с CRM", "Уведомления", "Аналитика", "Поддержка"],
-      price: "от 80 000 ₽",
+      price: "По запросу",
       duration: "2-4 недели",
       slug: "chatbots",
+      accent: "blue",
     },
     {
       icon: Settings,
-      problem: "Системы не связаны, данные дублируются, много ручной работы",
+      problem: "Системы не связаны между собой",
       solution: "API и интеграции",
-      description: "Свяжем ваши системы в единую экосистему: 1С, CRM, сайт, маркетплейсы, платёжные системы. Автоматизируем обмен данными.",
+      description: "Объединяем системы в единую экосистему: 1С, CRM, сайт, маркетплейсы, платёжные системы. Автоматизируем обмен данными.",
       tasks: [
-        "Интеграция с 1С и МойСклад",
+        "Интеграция с 1С",
         "Подключение платёжных систем",
         "Синхронизация с маркетплейсами",
-        "Автоматические отчёты и уведомления",
+        "Автоматизация отчётов",
       ],
       includes: ["API разработка", "Документация", "Тестирование", "Мониторинг", "Поддержка"],
-      price: "от 80 000 ₽",
+      price: "По запросу",
       duration: "2-6 недель",
       slug: "api-integrations",
+      accent: "teal",
     },
   ];
 
+  // Service images for visual enhancement
+  const serviceImages = [
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+    "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80",
+    "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+  ];
+
   return (
-    <section ref={sectionRef} className="py-20 lg:py-28 bg-slate-50">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12 lg:mb-16">
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
-            Что мы делаем
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
-            Решаем конкретные <span className="text-blue-600">задачи бизнеса</span>
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            У вас проблема — мы предлагаем решение. 
-            Без лишних технических терминов, понятно и по делу.
-          </p>
+    <section ref={sectionRef} className="py-20 lg:py-28 bg-slate-50 relative overflow-hidden">
+      {/* Background pattern */}
+      <div className="absolute inset-0 section-bg-pattern opacity-50" />
+      
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8 relative">
+        {/* Header with visual anchor */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-12 lg:mb-16">
+          <div className={`text-center lg:text-left transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-slate-200 text-blue-600 text-sm font-medium mb-4 shadow-sm">
+              Направления работы
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
+              Услуги{" "}
+              <span className="text-gradient-blue">веб-разработки</span>
+            </h2>
+            <p className="text-lg text-slate-600 max-w-xl">
+              Разрабатываем веб-решения для бизнеса: от сайтов до сложных систем автоматизации. Выберите направление или свяжитесь с нами для консультации.
+            </p>
+          </div>
+          
+          {/* Visual anchor image */}
+          <div className={`relative hidden lg:block transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80"
+                alt="Web development workspace"
+                width={600}
+                height={400}
+                className="object-cover w-full h-64"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
+                        <Globe className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-white font-medium">6 направлений</div>
+                        <div className="text-white/70 text-sm">Веб-разработка</div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            {/* Floating stat card */}
+            <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-xl p-4 border border-slate-100">
+              <div className="text-2xl font-bold text-blue-600">React</div>
+              <div className="text-sm text-slate-500">Next.js</div>
+            </div>
+          </div>
         </div>
 
         {/* Tabs navigation for mobile */}
@@ -142,9 +212,11 @@ export default function HomeWhatWeDoSection() {
               <button
                 key={index}
                 onClick={() => setActiveTab(index)}
-                className={`flex-shrink-0 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                className={`flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
                   activeTab === index
-                    ? "bg-blue-600 text-white"
+                    ? service.accent === "teal" 
+                      ? "bg-teal-600 text-white" 
+                      : "bg-blue-600 text-white"
                     : "bg-white border border-slate-200 text-slate-600 hover:border-slate-300"
                 }`}
               >
@@ -156,7 +228,7 @@ export default function HomeWhatWeDoSection() {
 
         {/* Mobile view - single card */}
         <div className="lg:hidden">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             {/* Problem */}
             <div className="mb-4 p-3 rounded-xl bg-slate-50 border border-slate-100">
               <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Проблема:</span>
@@ -167,14 +239,19 @@ export default function HomeWhatWeDoSection() {
             <div className="flex items-center gap-3 mb-4">
               {(() => {
                 const IconComponent = services[activeTab].icon;
+                const isBlue = services[activeTab].accent === "blue";
                 return (
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <IconComponent className="w-6 h-6 text-blue-600" />
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    isBlue ? "bg-blue-100" : "bg-teal-100"
+                  }`}>
+                    <IconComponent className={`w-6 h-6 ${isBlue ? "text-blue-600" : "text-teal-600"}`} />
                   </div>
                 );
               })()}
               <div>
-                <span className="text-xs text-blue-600 font-medium uppercase tracking-wider">Решение:</span>
+                <span className={`text-xs font-medium uppercase tracking-wider ${
+                  services[activeTab].accent === "blue" ? "text-blue-600" : "text-teal-600"
+                }`}>Решение:</span>
                 <h3 className="text-xl font-semibold text-slate-900">
                   {services[activeTab].solution}
                 </h3>
@@ -191,7 +268,9 @@ export default function HomeWhatWeDoSection() {
               <div className="space-y-2">
                 {services[activeTab].tasks.map((task, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
+                      services[activeTab].accent === "blue" ? "text-blue-600" : "text-teal-600"
+                    }`} />
                     <span className="text-sm text-slate-600">{task}</span>
                   </div>
                 ))}
@@ -201,7 +280,7 @@ export default function HomeWhatWeDoSection() {
             {/* Includes */}
             <div className="flex flex-wrap gap-2 mb-5">
               {services[activeTab].includes.map((item, i) => (
-                <span key={i} className="px-3 py-1 text-xs text-slate-600 bg-slate-100 rounded-full">
+                <span key={i} className="px-3 py-1 text-xs text-slate-600 bg-slate-100 rounded-full font-medium">
                   {item}
                 </span>
               ))}
@@ -210,7 +289,9 @@ export default function HomeWhatWeDoSection() {
             {/* Price & Duration */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-100">
               <div>
-                <span className="text-blue-600 font-semibold text-lg">{services[activeTab].price}</span>
+                <span className={`font-semibold text-lg ${
+                  services[activeTab].accent === "blue" ? "text-blue-600" : "text-teal-600"
+                }`}>{services[activeTab].price}</span>
                 <span className="text-slate-400 text-sm ml-2">• {services[activeTab].duration}</span>
               </div>
               <Link 
@@ -224,70 +305,94 @@ export default function HomeWhatWeDoSection() {
           </div>
         </div>
 
-        {/* Desktop Grid */}
+        {/* Desktop Grid with enhanced cards */}
         <div className="hidden lg:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => {
             const IconComponent = service.icon;
+            const isBlue = service.accent === "blue";
             return (
               <div
                 key={index}
-                className="bg-white border border-slate-200 rounded-2xl p-6 hover:border-blue-200 hover:shadow-lg transition-all flex flex-col"
+                className={`bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-blue-200 hover:shadow-xl transition-all duration-300 flex flex-col group hover:-translate-y-1 ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
               >
-                {/* Problem badge */}
-                <div className="mb-4 p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Проблема:</span>
-                  <p className="text-slate-700 font-medium mt-1 text-sm">{service.problem}</p>
+                {/* Service image */}
+                <div className="relative h-36 overflow-hidden">
+                  <Image
+                    src={serviceImages[index]}
+                    alt={service.solution}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent" />
+                  <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center backdrop-blur-sm ${
+                      isBlue ? "bg-blue-600/90" : "bg-teal-600/90"
+                    }`}>
+                      <IconComponent className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-white/90 text-sm font-medium">{service.duration}</span>
+                  </div>
                 </div>
 
-                {/* Solution */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <IconComponent className="w-6 h-6 text-blue-600" />
+                <div className="p-5 flex flex-col flex-grow">
+                  {/* Problem badge */}
+                  <div className="mb-3 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                    <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Проблема:</span>
+                    <p className="text-slate-700 font-medium mt-0.5 text-sm">{service.problem}</p>
                   </div>
-                  <div>
-                    <span className="text-xs text-blue-600 font-medium uppercase tracking-wider">Решение:</span>
+
+                  {/* Solution */}
+                  <div className="mb-3">
+                    <span className={`text-xs font-medium uppercase tracking-wider ${
+                      isBlue ? "text-blue-600" : "text-teal-600"
+                    }`}>Решение:</span>
                     <h3 className="text-lg font-semibold text-slate-900">
                       {service.solution}
                     </h3>
                   </div>
-                </div>
 
-                {/* Description */}
-                <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
-                  {service.description}
-                </p>
+                  {/* Description */}
+                  <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                    {service.description}
+                  </p>
 
-                {/* Includes */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {service.includes.slice(0, 4).map((item, i) => (
-                    <span
-                      key={i}
-                      className="px-2 py-1 text-xs rounded-md bg-blue-50 text-blue-600"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                  {service.includes.length > 4 && (
-                    <span className="px-2 py-1 text-xs text-slate-400">
-                      +{service.includes.length - 4}
-                    </span>
-                  )}
-                </div>
-
-                {/* Price & Duration */}
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
-                  <div className="flex items-center gap-2">
-                    <span className="text-blue-600 font-semibold">{service.price}</span>
-                    <span className="text-slate-300">•</span>
-                    <span className="text-slate-400 text-sm">{service.duration}</span>
+                  {/* Includes */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {service.includes.slice(0, 4).map((item, i) => (
+                      <span
+                        key={i}
+                        className={`px-2 py-1 text-xs rounded-md font-medium ${
+                          isBlue ? "bg-blue-50 text-blue-600" : "bg-teal-50 text-teal-600"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                    {service.includes.length > 4 && (
+                      <span className="px-2 py-1 text-xs text-slate-400">
+                        +{service.includes.length - 4}
+                      </span>
+                    )}
                   </div>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    className="text-sm text-slate-400 hover:text-blue-600 transition-colors flex items-center gap-1"
-                  >
-                    Подробнее
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+
+                  {/* Price & CTA */}
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
+                    <span className={`font-bold text-lg ${isBlue ? "text-blue-600" : "text-teal-600"}`}>
+                      {service.price}
+                    </span>
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className={`text-sm font-medium flex items-center gap-1 transition-colors ${
+                        isBlue ? "text-blue-600 hover:text-blue-700" : "text-teal-600 hover:text-teal-700"
+                      }`}
+                    >
+                      Подробнее
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             );
@@ -297,12 +402,12 @@ export default function HomeWhatWeDoSection() {
         {/* Bottom CTA */}
         <div className="text-center mt-12">
           <div className="inline-flex flex-col sm:flex-row items-center gap-4">
-            <p className="text-slate-500">Не нашли свою задачу?</p>
+            <p className="text-slate-500">Не нашли подходящую услугу?</p>
             <Link
               href="/contact"
-              className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors bg-white px-5 py-2.5 rounded-lg border border-slate-200 hover:border-blue-200"
+              className="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors bg-white px-5 py-2.5 rounded-xl border border-slate-200 hover:border-blue-200 hover:shadow-md"
             >
-              Расскажите о ней — поможем
+              Свяжитесь с нами
               <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </div>

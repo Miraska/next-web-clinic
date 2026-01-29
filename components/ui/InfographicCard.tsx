@@ -20,7 +20,7 @@ export default function InfographicCard({
   title,
   description,
   stats,
-  color = "#00ff88",
+  color = "#2563EB",
   delay = 0,
   image,
 }: InfographicCardProps) {
@@ -35,7 +35,7 @@ export default function InfographicCard({
       transition={{ duration: 0.6, delay }}
       className="group relative"
     >
-      <div className="relative p-6 lg:p-8 rounded-2xl bg-[#0f1520] border border-[#1f2937] hover:border-[#00ff88]/30 transition-all duration-500 h-full overflow-hidden">
+      <div className="relative p-6 lg:p-8 rounded-2xl bg-slate-50 border border-slate-200 hover:border-blue-300 transition-all duration-500 h-full overflow-hidden">
         {/* Background gradient on hover */}
         <div 
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -52,8 +52,8 @@ export default function InfographicCard({
 
         {/* Image placeholder */}
         {image && (
-          <div className="relative mb-6 rounded-xl overflow-hidden bg-[#0a0e17] aspect-video flex items-center justify-center border border-[#1f2937]">
-            <div className="text-white/20 text-sm">[Инфографика]</div>
+          <div className="relative mb-6 rounded-xl overflow-hidden bg-slate-100 aspect-video flex items-center justify-center border border-slate-200">
+            <div className="text-slate-400 text-sm">[Инфографика]</div>
             {/* Decorative elements */}
             <div className="absolute top-2 right-2 w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
           </div>
@@ -68,19 +68,19 @@ export default function InfographicCard({
         </div>
 
         {/* Content */}
-        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#00ff88] transition-colors">
+        <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
           {title}
         </h3>
-        <p className="text-white/60 leading-relaxed mb-4">
+        <p className="text-slate-600 leading-relaxed mb-4">
           {description}
         </p>
 
         {/* Stats */}
         {stats && (
-          <div className="pt-4 border-t border-[#1f2937]">
+          <div className="pt-4 border-t border-slate-200">
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold" style={{ color }}>{stats.value}</span>
-              <span className="text-sm text-white/50">{stats.label}</span>
+              <span className="text-sm text-slate-500">{stats.label}</span>
             </div>
           </div>
         )}

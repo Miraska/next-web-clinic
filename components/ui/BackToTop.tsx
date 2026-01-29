@@ -1,6 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { ArrowUp } from "lucide-react";
 
 export default function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,6 +28,12 @@ export default function BackToTop() {
     });
   };
 
+  // Gradient color based on progress
+  const getProgressColor = () => {
+    if (scrollProgress < 50) return "#2563eb"; // blue
+    return "#0d9488"; // teal
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -36,7 +43,7 @@ export default function BackToTop() {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           transition={{ duration: 0.2 }}
           onClick={scrollToTop}
-          className="fixed bottom-24 right-6 z-50 w-12 h-12 rounded-full bg-white border border-slate-200 shadow-lg flex items-center justify-center group hover:border-blue-300 hover:shadow-xl transition-all duration-200"
+          className="fixed bottom-24 right-6 z-50 w-12 h-12 rounded-full bg-white border border-slate-200 shadow-lg flex items-center justify-center group hover:border-blue-300 hover:shadow-xl transition-all"
           aria-label="Вернуться наверх"
         >
           {/* Progress ring */}
@@ -53,7 +60,7 @@ export default function BackToTop() {
               cx="24"
               cy="24"
               r="22"
-              stroke="#2563eb"
+              stroke={getProgressColor()}
               strokeWidth="2"
               fill="none"
               strokeLinecap="round"
@@ -64,14 +71,7 @@ export default function BackToTop() {
           </svg>
           
           {/* Arrow icon */}
-          <svg 
-            className="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors relative z-10" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
+          <ArrowUp className="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors relative z-10" />
         </motion.button>
       )}
     </AnimatePresence>

@@ -1,9 +1,27 @@
 "use client";
-import { useRef, useState } from "react";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { ChevronDown, HelpCircle, MessageCircle } from "lucide-react";
 
 export default function HomeFAQSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const faqCategories = [
     { id: "general", label: "Общие вопросы" },
@@ -18,82 +36,82 @@ export default function HomeFAQSection() {
   const faqItems: Record<string, Array<{ question: string; answer: string }>> = {
     general: [
       {
-        question: "Какие проекты вы делаете?",
-        answer: "Сайты любой сложности: от лендингов до крупных порталов. Интернет-магазины, CRM и ERP системы, веб-приложения, чат-боты для Telegram и WhatsApp, API и интеграции с различными сервисами. Если коротко — всё, что работает в браузере или связано с веб-технологиями."
+        question: "Какие проекты вы реализуете?",
+        answer: "Сайты различной сложности, интернет-магазины, CRM и ERP системы, веб-приложения, чат-боты, API и интеграции. Для уточнения возможности реализации вашей задачи свяжитесь с нами."
       },
       {
-        question: "Сколько стоит сделать сайт?",
-        answer: "Зависит от сложности. Простой лендинг — от 50 000 ₽, сайт компании — от 150 000 ₽, интернет-магазин — от 250 000 ₽, CRM-система — от 400 000 ₽. Точную цену называем после обсуждения задачи — это бесплатно и ни к чему не обязывает."
+        question: "Как определяется стоимость проекта?",
+        answer: "Стоимость зависит от объёма работ, функциональности и сложности проекта. После обсуждения задачи формируем коммерческое предложение с детализацией."
       },
       {
-        question: "Сколько времени занимает разработка?",
-        answer: "Лендинг — 2-3 недели, корпоративный сайт — 4-8 недель, интернет-магазин — 2-3 месяца, сложные системы — от 3 месяцев. Сроки зависят от объёма функционала и скорости согласований с вашей стороны."
+        question: "Какие сроки разработки?",
+        answer: "Сроки определяются после анализа задачи. Ориентировочно: лендинг — 2-3 недели, корпоративный сайт — 4-8 недель, интернет-магазин — 2-4 месяца. Точные сроки фиксируются в договоре."
       },
       {
-        question: "Работаете с регионами или только с Москвой?",
-        answer: "Работаем удалённо с клиентами из любого города и страны. Созваниваемся по видеосвязи, общаемся в мессенджерах, показываем результаты онлайн. За годы работы убедились, что удалёнка не влияет на качество."
+        question: "Работаете ли вы удалённо?",
+        answer: "Да, работаем с клиентами из любых регионов. Коммуникация ведётся онлайн: видеозвонки, мессенджеры, электронная почта. Результаты демонстрируются дистанционно."
       },
     ],
     process: [
       {
-        question: "Как начать работу с вами?",
-        answer: "Напишите нам в Telegram, на почту или оставьте заявку на сайте. Расскажите о задаче — мы зададим уточняющие вопросы, предложим решение и посчитаем стоимость. Первая консультация бесплатная."
+        question: "Как начать работу?",
+        answer: "Свяжитесь с нами через форму на сайте, Telegram или электронную почту. Опишите задачу — проведём консультацию и подготовим предложение."
       },
       {
-        question: "Нужно ли мне техническое задание?",
-        answer: "Не обязательно. Достаточно описать задачу своими словами: что хотите получить, какие проблемы решить. Мы сами структурируем информацию и подготовим понятное ТЗ, которое утвердим вместе."
+        question: "Нужно ли готовое техническое задание?",
+        answer: "Не обязательно. Достаточно описать задачу своими словами. Мы структурируем информацию и подготовим техническое задание для согласования."
       },
       {
-        question: "Как часто вы показываете результаты?",
-        answer: "Работаем спринтами по 1-2 недели. После каждого спринта показываем демо и собираем обратную связь. Вы всегда знаете, на каком этапе проект, и можете вносить корректировки по ходу работы."
+        question: "Как часто демонстрируется прогресс?",
+        answer: "Работаем итерациями с регулярными демонстрациями. Периодичность согласовывается в начале проекта. Стандартно — каждые 1-2 недели."
       },
       {
-        question: "Что если мне не понравится результат?",
-        answer: "На каждом этапе согласовываем результат перед тем, как идти дальше. Если что-то не так — исправляем до тех пор, пока не будет соответствовать ТЗ. Правки входят в стоимость проекта."
+        question: "Как происходит приёмка работ?",
+        answer: "Каждый этап согласовывается перед переходом к следующему. При выявлении несоответствий техническому заданию вносятся корректировки."
       },
       {
-        question: "Можно ли вносить изменения в процессе?",
-        answer: "Да, но в разумных пределах. Небольшие корректировки — без проблем. Если хотите добавить существенный функционал — обсудим дополнительно, оценим сроки и стоимость."
+        question: "Возможны ли изменения в процессе работы?",
+        answer: "Небольшие корректировки в рамках согласованного объёма возможны. Существенные изменения требуют дополнительного согласования условий."
       },
     ],
     payment: [
       {
-        question: "Как происходит оплата?",
-        answer: "Работаем по схеме 50/50: половина суммы — предоплата перед началом работ, вторая половина — после приёмки готового проекта. Для крупных проектов возможна поэтапная оплата."
+        question: "Каков порядок оплаты?",
+        answer: "Условия оплаты согласовываются индивидуально и фиксируются в договоре. Возможна поэтапная оплата по мере выполнения работ."
       },
       {
-        question: "Работаете по договору?",
-        answer: "Обязательно. Заключаем официальный договор, где прописаны все условия: что делаем, в какие сроки, за какую сумму. Это защита и для вас, и для нас."
+        question: "Заключаете ли вы договор?",
+        answer: "Да, работаем по официальному договору. В договоре фиксируются объём работ, сроки, этапы и условия сотрудничества."
       },
       {
-        question: "Что входит в гарантию?",
-        answer: "3 месяца после запуска бесплатно исправляем любые баги и ошибки в нашем коде. Не включает: изменения, вызванные вашими правками, проблемы на стороне хостинга или добавление нового функционала."
+        question: "Что включает техническая поддержка?",
+        answer: "Условия технической поддержки оговариваются в договоре. Стандартно включает исправление ошибок в коде в течение согласованного периода."
       },
       {
-        question: "Можно ли вернуть деньги?",
-        answer: "Если мы не начали работу — вернём предоплату полностью. Если работа уже идёт — вернём пропорционально невыполненному объёму. Все условия прописаны в договоре."
+        question: "Какие условия расторжения договора?",
+        answer: "Условия расторжения прописываются в договоре. При необходимости досрочного завершения работ производится взаиморасчёт согласно выполненному объёму."
       },
     ],
     tech: [
       {
-        question: "На чём вы делаете сайты?",
-        answer: "Используем современные технологии: React, Next.js, TypeScript для фронтенда; Node.js, Python для бэкенда; PostgreSQL, MongoDB для баз данных. Выбираем стек под задачу, а не наоборот."
+        question: "Какие технологии используются?",
+        answer: "React, Next.js, TypeScript для фронтенда; Node.js, Python для бэкенда; PostgreSQL, MongoDB для баз данных. Технический стек подбирается под задачу."
       },
       {
-        question: "Получу ли я доступ к коду?",
-        answer: "Да, передаём все исходники, доступы к репозиторию, серверам, базам данных. Код — ваша собственность. Вы не привязаны к нам и можете продолжить развитие с другой командой."
+        question: "Передаётся ли исходный код?",
+        answer: "Да, по завершении проекта передаём исходный код, доступы к репозиторию, серверам и базам данных, а также техническую документацию."
       },
       {
-        question: "Помогаете с хостингом и доменом?",
-        answer: "Да, подбираем хостинг под проект, помогаем зарегистрировать или перенести домен, настраиваем всё для корректной работы. Можем рекомендовать провайдеров или работать с вашими."
+        question: "Помогаете ли с инфраструктурой?",
+        answer: "Да, помогаем с выбором и настройкой хостинга, регистрацией домена, настройкой SSL-сертификата и другой инфраструктуры."
       },
       {
-        question: "Делаете SEO-оптимизацию?",
-        answer: "Базовая техническая SEO-оптимизация входит в каждый проект: правильная структура, мета-теги, скорость загрузки, адаптивность. Продвижение и контент-маркетинг — отдельная услуга."
+        question: "Выполняется ли SEO-оптимизация?",
+        answer: "Базовая техническая SEO-оптимизация входит в стандартный объём работ: корректная структура, мета-теги, оптимизация скорости загрузки, адаптивность."
       },
       {
-        question: "Сайт будет работать на телефонах?",
-        answer: "Обязательно. Все проекты делаем адаптивными — они корректно отображаются на любых устройствах: телефонах, планшетах, десктопах. Тестируем на реальных устройствах."
+        question: "Адаптивны ли проекты для мобильных устройств?",
+        answer: "Да, все проекты разрабатываются с адаптивным дизайном для корректного отображения на различных устройствах."
       },
     ],
   };
@@ -105,33 +123,39 @@ export default function HomeFAQSection() {
   };
 
   return (
-    <section ref={sectionRef} className="py-20 lg:py-28 bg-white">
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
+    <section ref={sectionRef} className="py-20 lg:py-28 bg-white relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-blue-50/30 to-transparent pointer-events-none" />
+      
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-8 relative">
         {/* Header */}
-        <div className="text-center mb-12">
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mb-4">
-            Частые вопросы
+        <div className={`text-center mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-100/50 text-blue-600 text-sm font-medium mb-4 shadow-sm">
+            Вопросы и ответы
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-4">
-            Ответы на <span className="text-blue-600">вопросы</span>
+            Часто задаваемые{" "}
+            <span className="text-gradient-blue">вопросы</span>
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Собрали самые популярные вопросы. Не нашли свой — напишите нам.
+            Ответы на типичные вопросы о процессе работы. Для уточнения деталей свяжитесь с нами.
           </p>
         </div>
 
         {/* Category tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {faqCategories.map((category) => (
+          {faqCategories.map((category, index) => (
             <button
               key={category.id}
               onClick={() => {
                 setActiveCategory(category.id);
                 setOpenItems([0]);
               }}
-              className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 activeCategory === category.id
-                  ? "bg-blue-600 text-white"
+                  ? index % 2 === 0 
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25"
+                    : "bg-teal-600 text-white shadow-lg shadow-teal-600/25"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
@@ -146,17 +170,19 @@ export default function HomeFAQSection() {
             {faqItems[activeCategory].map((item, index) => (
               <div
                 key={index}
-                className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:border-slate-300 transition-colors"
+                className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:border-slate-300 transition-all"
               >
                 <button
                   onClick={() => toggleItem(index)}
                   className="w-full p-5 flex items-center justify-between text-left"
                 >
                   <span className="font-medium text-slate-900 pr-4">{item.question}</span>
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center transition-transform ${
-                    openItems.includes(index) ? "rotate-180" : ""
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center transition-all ${
+                    openItems.includes(index) ? "rotate-180 border-blue-200 bg-blue-50" : ""
                   }`}>
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
+                    <ChevronDown className={`w-4 h-4 transition-colors ${
+                      openItems.includes(index) ? "text-blue-600" : "text-slate-500"
+                    }`} />
                   </div>
                 </button>
                 
@@ -171,27 +197,33 @@ export default function HomeFAQSection() {
           </div>
         </div>
 
-        {/* Still have questions */}
-        <div className="mt-12 text-center">
-          <div className="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-              <HelpCircle className="w-6 h-6 text-blue-600" />
+        {/* Still have questions - enhanced CTA card */}
+        <div className={`mt-12 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="max-w-2xl mx-auto p-8 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-2xl shadow-blue-600/25 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-teal-500/20 rounded-full translate-y-1/2 -translate-x-1/2" />
+            
+            <div className="relative flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                <MessageCircle className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-xl mb-1">Есть вопросы?</p>
+                <p className="text-white/80">Свяжитесь с нами для получения дополнительной информации</p>
+              </div>
+              <a
+                href="https://t.me/webclinic"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all hover:shadow-lg whitespace-nowrap"
+              >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.308-.346-.11l-6.4 4.02-2.76-.918c-.6-.187-.612-.6.125-.89l10.782-4.156c.5-.18.94.12.78.878z"/>
+                </svg>
+                Связаться
+              </a>
             </div>
-            <div className="text-center sm:text-left">
-              <p className="font-medium text-slate-900">Остались вопросы?</p>
-              <p className="text-sm text-slate-500">Напишите нам — ответим в течение пары часов</p>
-            </div>
-            <a
-              href="https://t.me/webclinic"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm whitespace-nowrap"
-            >
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.68c.223-.198-.054-.308-.346-.11l-6.4 4.02-2.76-.918c-.6-.187-.612-.6.125-.89l10.782-4.156c.5-.18.94.12.78.878z"/>
-              </svg>
-              Написать в Telegram
-            </a>
           </div>
         </div>
       </div>

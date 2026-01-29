@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import ConsultationModal from "@/components/ui/ConsultationModal";
-import { Mail, Phone, Github } from "lucide-react";
+import { Mail, Phone, Github, ArrowRight } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -50,7 +50,9 @@ export default function Footer() {
 
   return (
     <>
-      <footer ref={footerRef} className="bg-slate-50 border-t border-slate-200">
+      <footer ref={footerRef} className="bg-slate-50 border-t border-slate-200 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-50/30 to-transparent pointer-events-none" />
         <div className="max-w-[1280px] mx-auto px-6 lg:px-8">
           {/* Main Footer Content */}
           <div className="py-12 lg:py-16">
@@ -58,31 +60,31 @@ export default function Footer() {
               {/* Brand & Contact */}
               <div className="lg:col-span-4">
                 <Link href="/" className="inline-flex items-center gap-2 mb-5">
-                  <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-lg shadow-blue-600/20">
                     <span className="text-white font-bold text-lg">W</span>
                   </div>
                   <span className="text-xl font-bold text-slate-900">WebClinic</span>
                 </Link>
                 <p className="text-slate-600 leading-relaxed mb-6">
-                  Делаем сайты и веб-сервисы, которые реально помогают бизнесу.
-                  Понятно, в срок и без сюрпризов.
+                  Разработка сайтов и веб-сервисов для бизнеса.
+                  Работаем по договору.
                 </p>
                 <div className="space-y-3 mb-6">
                   <a
                     href="mailto:hello@webclinic.dev"
-                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors"
+                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors group"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center group-hover:border-blue-200 group-hover:bg-blue-50 transition-all">
                       <Mail className="w-4 h-4 text-blue-600" />
                     </div>
                     hello@webclinic.dev
                   </a>
                   <a
                     href="tel:+74951234567"
-                    className="flex items-center gap-3 text-slate-600 hover:text-blue-600 transition-colors"
+                    className="flex items-center gap-3 text-slate-600 hover:text-teal-600 transition-colors group"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center">
-                      <Phone className="w-4 h-4 text-blue-600" />
+                    <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center group-hover:border-teal-200 group-hover:bg-teal-50 transition-all">
+                      <Phone className="w-4 h-4 text-teal-600" />
                     </div>
                     +7 (495) 123-45-67
                   </a>
@@ -96,7 +98,7 @@ export default function Footer() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-9 h-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-colors"
+                      className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all"
                       aria-label={social.label}
                     >
                       {social.icon}
@@ -107,7 +109,7 @@ export default function Footer() {
 
               {/* Navigation */}
               <div className="lg:col-span-2">
-                <h3 className="text-slate-900 font-medium mb-4">Навигация</h3>
+                <h3 className="text-slate-900 font-semibold mb-4">Навигация</h3>
                 <nav className="space-y-2.5">
                   {navigationLinks.map((link) => (
                     <div key={link.href}>
@@ -124,7 +126,7 @@ export default function Footer() {
 
               {/* Services */}
               <div className="lg:col-span-3">
-                <h3 className="text-slate-900 font-medium mb-4">Услуги</h3>
+                <h3 className="text-slate-900 font-semibold mb-4">Услуги</h3>
                 <nav className="space-y-2.5">
                   {services.map((service) => (
                     <div key={service.href}>
@@ -141,7 +143,7 @@ export default function Footer() {
 
               {/* Helpful */}
               <div className="lg:col-span-3">
-                <h3 className="text-slate-900 font-medium mb-4">Полезное</h3>
+                <h3 className="text-slate-900 font-semibold mb-4">Полезное</h3>
                 <nav className="space-y-2.5">
                   {helpfulLinks.map((link) => (
                     <div key={link.href}>
@@ -158,26 +160,31 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* CTA Banner */}
-          <div className="py-6 border-t border-slate-200">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl bg-blue-50 border border-blue-100">
-              <div>
-                <h4 className="text-lg font-medium text-slate-900 mb-1">Есть вопрос или задача?</h4>
-                <p className="text-slate-600 text-sm">Расскажите — ответим в течение нескольких часов</p>
+          {/* CTA Banner - Enhanced */}
+          <div className="py-6 border-t border-slate-200 relative">
+            <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-6 lg:p-8 rounded-2xl overflow-hidden">
+              {/* Background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-teal-500/20 rounded-full -translate-y-1/2 translate-x-1/2" />
+              
+              <div className="relative">
+                <h4 className="text-xl font-bold text-white mb-1">Есть вопрос?</h4>
+                <p className="text-blue-100">Свяжитесь с нами для обсуждения проекта</p>
               </div>
-              <div className="flex gap-3">
+              <div className="relative flex gap-3">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                  className="group inline-flex items-center justify-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all hover:shadow-lg text-sm"
                   data-cta="footer-request"
                 >
-                  Оставить заявку
+                  Связаться
+                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
                 <a
                   href="https://t.me/webclinic"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-5 py-2.5 border border-slate-200 bg-white text-slate-700 font-medium rounded-lg hover:border-blue-600 hover:text-blue-600 transition-colors text-sm"
+                  className="inline-flex items-center justify-center px-6 py-3 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-sm"
                 >
                   Telegram
                 </a>
@@ -189,13 +196,13 @@ export default function Footer() {
           <div className="py-5 border-t border-slate-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="text-slate-500 text-sm">
-                © {currentYear} WebClinic. Все права защищены.
+                © {currentYear} WebClinic
               </div>
               <div className="flex gap-6 text-sm">
-                <Link href="/privacy" className="text-slate-500 hover:text-slate-700 transition-colors">
+                <Link href="/privacy" className="text-slate-500 hover:text-blue-600 transition-colors">
                   Политика конфиденциальности
                 </Link>
-                <Link href="/terms" className="text-slate-500 hover:text-slate-700 transition-colors">
+                <Link href="/terms" className="text-slate-500 hover:text-blue-600 transition-colors">
                   Оферта
                 </Link>
               </div>

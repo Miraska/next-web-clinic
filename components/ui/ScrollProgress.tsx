@@ -8,7 +8,7 @@ interface ScrollProgressProps {
 }
 
 export default function ScrollProgress({
-  color = "#00ff88",
+  color = "#2563EB",
   height = 3,
   position = "top",
 }: ScrollProgressProps) {
@@ -24,7 +24,7 @@ export default function ScrollProgress({
       className={`fixed left-0 right-0 z-[60] ${position === "top" ? "top-0" : "bottom-0"}`}
       style={{
         height,
-        background: `linear-gradient(90deg, ${color}, #00d4ff)`,
+        background: `linear-gradient(90deg, ${color}, #0D9488)`,
         scaleX,
         transformOrigin: "0%",
         boxShadow: `0 0 10px ${color}`,
