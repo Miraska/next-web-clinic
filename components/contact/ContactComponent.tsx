@@ -39,15 +39,27 @@ export default function ContactComponent() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     setIsSubmitting(true);
 
-    // Simulate submission (как на главной)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const { submitContact } = await import("@/lib/submit-contact");
+    const result = await submitContact({
+      source: "contact",
+      name: formData.name.trim(),
+      contactMethod: formData.contactMethod,
+      contact: formData.contact.trim(),
+      task: formData.task.trim() || undefined,
+    });
 
     setIsSubmitting(false);
+    if (!result.ok) {
+      setSubmitError(result.error);
+      return;
+    }
     setIsSuccess(true);
     setFormData({ name: "", contactMethod: "telegram", contact: "", task: "" });
   };
@@ -230,6 +242,12 @@ export default function ContactComponent() {
                         placeholder="Расскажите подробнее о вашем проекте, целях и пожеланиях..."
                       />
                     </div>
+
+                    {submitError && (
+                      <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                        {submitError}
+                      </div>
+                    )}
 
                     <button
                       type="submit"

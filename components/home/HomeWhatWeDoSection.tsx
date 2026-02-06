@@ -38,7 +38,7 @@ export default function HomeWhatWeDoSection() {
   const services = [
     {
       icon: Globe,
-      problem: "Требуется представительство компании в интернете",
+      problem: "Отсутсвие сильного и профессионального онлайн присутствия компании в интернете",
       solution: "Сайты и лендинги",
       description: "Разрабатываем сайты разной сложности: от одностраничных лендингов до корпоративных порталов с системой управления контентом.",
       tasks: [
@@ -55,7 +55,7 @@ export default function HomeWhatWeDoSection() {
     },
     {
       icon: ShoppingCart,
-      problem: "Необходима платформа для онлайн-продаж",
+      problem: "Теряем продажи, потому что клиенты не могут купить у нас товары онлайн в любое время",
       solution: "Интернет-магазины",
       description: "Разрабатываем интернет-магазины с каталогом, системой оплаты и доставки. Выполняем интеграцию с учётными системами.",
       tasks: [
@@ -72,7 +72,7 @@ export default function HomeWhatWeDoSection() {
     },
     {
       icon: Monitor,
-      problem: "Нужен сервис с нестандартным функционалом",
+      problem: "Хотим дать клиентам уникальный онлайн сервис который станет нашим ключевым преимуществом",
       solution: "Веб-приложения",
       description: "Разрабатываем веб-приложения под конкретные бизнес-задачи: личные кабинеты, системы бронирования, внутренние порталы.",
       tasks: [
@@ -89,7 +89,7 @@ export default function HomeWhatWeDoSection() {
     },
     {
       icon: Database,
-      problem: "Данные хранятся в разных местах, нет единой системы",
+      problem: "Наши уникальные бизнес процессы не может автоматизировать ни один готовый софт",
       solution: "CRM/ERP системы",
       description: "Разрабатываем системы управления под ваши процессы: учёт клиентов, сделок, задач. Объединяем данные в одном месте.",
       tasks: [
@@ -98,7 +98,7 @@ export default function HomeWhatWeDoSection() {
         "Складской учёт",
         "Управление задачами",
       ],
-      includes: ["База клиентов", "Воронка продаж", "Задачи", "Отчёты", "Интеграции"],
+      includes: ["База клиентов", "Воронка продаж", "Отчёты", "Интеграции", "Отслеживание всех чатов", "AI отслеживание звонков"],
       price: "По запросу",
       duration: "3-5 месяцев",
       slug: "crm-erp",
@@ -106,7 +106,7 @@ export default function HomeWhatWeDoSection() {
     },
     {
       icon: MessageSquare,
-      problem: "Требуется автоматизация коммуникации с клиентами",
+      problem: "Клиенты не могут получить быстрый ответ в нерабочее время, а менеджеры перегружены однотипными вопросами",
       solution: "Чат-боты",
       description: "Разрабатываем ботов для Telegram, WhatsApp и сайта. Автоматизируем ответы на типовые вопросы, приём заявок, запись на услуги.",
       tasks: [
@@ -340,7 +340,7 @@ export default function HomeWhatWeDoSection() {
                 <div className="p-5 flex flex-col flex-grow">
                   {/* Problem badge */}
                   <div className="mb-3 p-2.5 rounded-lg bg-slate-50 border border-slate-100">
-                    <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Проблема:</span>
+                    <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Проблема заказчика:</span>
                     <p className="text-slate-700 font-medium mt-0.5 text-sm">{service.problem}</p>
                   </div>
 
@@ -361,7 +361,7 @@ export default function HomeWhatWeDoSection() {
 
                   {/* Includes */}
                   <div className="flex flex-wrap gap-1.5 mb-4">
-                    {service.includes.slice(0, 4).map((item, i) => (
+                    {service.includes.slice(0, 6).map((item, i) => (
                       <span
                         key={i}
                         className={`px-2 py-1 text-xs rounded-md font-medium ${
@@ -371,7 +371,7 @@ export default function HomeWhatWeDoSection() {
                         {item}
                       </span>
                     ))}
-                    {service.includes.length > 4 && (
+                    {service.includes.length > 6 && (
                       <span className="px-2 py-1 text-xs text-slate-400">
                         +{service.includes.length - 4}
                       </span>

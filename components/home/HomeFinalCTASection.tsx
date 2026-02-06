@@ -49,15 +49,27 @@ export default function HomeFinalCTASection() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     setIsSubmitting(true);
-    
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
+    const { submitContact } = await import("@/lib/submit-contact");
+    const result = await submitContact({
+      source: "final-cta",
+      name: formData.name.trim(),
+      contactMethod: formData.contactMethod,
+      contact: formData.contact.trim(),
+      task: formData.task.trim() || undefined,
+    });
+
     setIsSubmitting(false);
+    if (!result.ok) {
+      setSubmitError(result.error);
+      return;
+    }
     setIsSuccess(true);
     setFormData({ name: "", contactMethod: "telegram", contact: "", task: "" });
   };
@@ -216,6 +228,12 @@ export default function HomeFinalCTASection() {
                         className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 focus:outline-none transition-all resize-none"
                       />
                     </div>
+
+                    {submitError && (
+                      <div className="p-3 rounded-xl bg-red-500/20 border border-red-400/50 text-red-100 text-sm">
+                        {submitError}
+                      </div>
+                    )}
 
                     <button
                       type="submit"

@@ -122,6 +122,7 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<string[]>(["contact"]);
   const [activeHint, setActiveHint] = useState<string | null>(null);
   const [hintPosition, setHintPosition] = useState<{ top: number; left: number; transformOrigin: string } | null>(null);
@@ -318,15 +319,28 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     setIsSubmitting(true);
-    
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
+    const { submitContact } = await import("@/lib/submit-contact");
+    const result = await submitContact({
+      source: "modal",
+      name: formData.name.trim(),
+      contactMethod: formData.contactMethod,
+      contact: formData.contact.trim(),
+      projectType: formData.projectType || undefined,
+      selectedFeatures: formData.selectedFeatures.length > 0 ? formData.selectedFeatures : undefined,
+      message: formData.message.trim() || undefined,
+    });
+
     setIsSubmitting(false);
+
+    if (!result.ok) {
+      setSubmitError(result.error);
+      return;
+    }
+
     setIsSuccess(true);
-    
-    // Reset after showing success
     setTimeout(() => {
       setIsSuccess(false);
       setFormData({ name: "", contactMethod: "telegram", contact: "", projectType: "", selectedFeatures: [], message: "" });
@@ -618,7 +632,12 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
           </div>
 
           {/* Submit */}
-          <div className="pt-3">
+          <div className="pt-3 space-y-3">
+            {submitError && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                {submitError}
+              </div>
+            )}
             <button
               type="submit"
               disabled={isSubmitting || !formData.name || !formData.contact}
