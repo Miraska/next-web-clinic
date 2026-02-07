@@ -102,7 +102,7 @@ export default function HomeWhyUsSection() {
               {/* Main image */}
               <div className="rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
+                  src="/images/home/"
                   alt="Professional team collaboration"
                   width={600}
                   height={400}

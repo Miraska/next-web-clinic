@@ -33,7 +33,7 @@ export default function Home() {
       <HomeStatsSection />
       
       {/* Что мы делаем - проблемы и решения */}
-      <HomeWhatWeDoSection />
+      {/* <HomeWhatWeDoSection /> */}
       
       {/* Кому подходим / не подходим */}
       <HomeForWhomSection />
@@ -58,7 +58,7 @@ export default function Home() {
       <HomeFAQSection />
       
       {/* Финальный CTA */}
-      <HomeFinalCTASection />
+      {/* <HomeFinalCTASection /> */}
     </main>
   );
 }

@@ -23,6 +23,7 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
+  Zap,
 } from "lucide-react";
 
 const allServices = [
@@ -78,7 +79,7 @@ const allServices = [
     accent: "blue",
   },
   { 
-    name: "CRM / Личный кабинет", 
+    name: "CRM/ERP системы", 
     description: "Системы управления клиентами и данными",
     duration: "2-5 месяцев",
     popular: false,
@@ -112,7 +113,7 @@ const allServices = [
     accent: "blue",
   },
   { 
-    name: "Интеграции", 
+    name: "API и интеграции", 
     description: "Связь между системами",
     duration: "2-6 недель",
     popular: false,
@@ -146,7 +147,7 @@ const allServices = [
     accent: "blue",
   },
   { 
-    name: "Техническая поддержка", 
+    name: "Поддержка и развитие", 
     description: "Сопровождение и развитие проекта",
     duration: "По договору",
     popular: false,
@@ -163,7 +164,7 @@ const allServices = [
     accent: "teal",
   },
   { 
-    name: "Веб-приложение", 
+    name: "Веб-приложения", 
     description: "Сервисы с нестандартным функционалом",
     duration: "От 2 месяцев",
     popular: false,
@@ -177,6 +178,23 @@ const allServices = [
     ],
     bestFor: "Для реализации уникальной бизнес-логики",
     icon: Monitor,
+    accent: "blue",
+  },
+  { 
+    name: "Автоматизация бизнеса", 
+    description: "Интеграции, отчёты, уведомления, сценарии",
+    duration: "2-8 недель",
+    popular: false,
+    features: [
+      "Анализ процессов",
+      "Интеграции между системами",
+      "Триггерные сценарии",
+      "Автоотчёты и алерты",
+      "Документация",
+      "Поддержка",
+    ],
+    bestFor: "Для сокращения ручной работы",
+    icon: Zap,
     accent: "blue",
   },
 ];
@@ -325,7 +343,7 @@ export default function HomePricingSection() {
                         </div>
 
                         {/* CTA */}
-                        <button
+                        {/* <button
                           onClick={() => setIsModalOpen(true)}
                           className={`w-full py-3 rounded-xl font-medium text-center transition-all flex items-center justify-center gap-2 ${
                             service.popular
@@ -336,7 +354,7 @@ export default function HomePricingSection() {
                         >
                           Связаться
                           <ArrowRight className="w-4 h-4" />
-                        </button>
+                        </button> */}
                       </div>
                     </SwiperSlide>
                   );

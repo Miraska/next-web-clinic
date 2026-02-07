@@ -12,6 +12,7 @@ import {
   Code2,
   Search,
   Wrench,
+  Zap,
   ArrowRight,
   Check,
   Sparkles,
@@ -19,14 +20,15 @@ import {
 
 // Service images
 const serviceImages = [
-  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
-  "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80",
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80",
-  "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80",
-  "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=600&q=80",
-  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80",
-  "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=600&q=80",
-  "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80",
+  "/images/services/sites.png",
+  "/images/services/ecommerce.png",
+  "/images/services/web-apps.png",
+  "/images/services/crm-erp.png",
+  "/images/services/chatbots.png",
+  "/images/services/api-integrations.png",
+  "/images/services/seo.png",
+  "/images/services/support.png",
+  "/images/services/automation.png",
 ];
 
 interface Service {
@@ -289,6 +291,34 @@ export default function ServicesComponent() {
       timeline: "По договору",
       accent: "teal",
     },
+    {
+      id: "automation",
+      icon: Zap,
+      title: "Автоматизация бизнеса",
+      shortDesc: "Автоматизация повторяющихся процессов: интеграции между системами, отчёты, уведомления, сценарии. Сокращение ручной работы.",
+      whoIsFor: [
+        "Операционным отделам",
+        "Руководителям",
+        "Командам продаж",
+      ],
+      tasks: [
+        "Снижение рутины",
+        "Интеграции между системами",
+        "Автоотчёты и алерты",
+        "Прозрачность процессов",
+      ],
+      includes: [
+        "Анализ процессов",
+        "Интеграции",
+        "Триггерные сценарии",
+        "Документация",
+        "Мониторинг",
+        "Поддержка",
+      ],
+      price: "По запросу",
+      timeline: "2-8 недель",
+      accent: "blue",
+    },
   ];
 
   return (
@@ -319,11 +349,11 @@ export default function ServicesComponent() {
             <div className="hidden lg:block relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80"
+                  src="/images/services/all-services.png"
                   alt="Web development"
                   width={600}
                   height={350}
-                  className="object-cover w-full h-72"
+                  className="object-cover w-full h-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 flex items-center gap-4">
@@ -339,7 +369,7 @@ export default function ServicesComponent() {
                     ))}
                   </div>
                   <div className="text-white">
-                    <div className="font-semibold">8 направлений</div>
+                    <div className="font-semibold">9 направлений</div>
                     <div className="text-sm text-white/70">Полный цикл разработки</div>
                   </div>
                 </div>
@@ -360,46 +390,43 @@ export default function ServicesComponent() {
           </div>
 
           {/* Services Grid */}
-          <div className="grid md:grid-cols-2 gap-6 lg:gap-8 mb-12 lg:mb-16">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12 lg:mb-16">
             {services.map((service, index) => {
               const IconComponent = service.icon;
               const isBlue = service.accent === "blue";
               return (
                 <div
                   key={service.id}
-                  className={`group rounded-2xl bg-white border border-slate-200 hover:border-blue-200 hover:shadow-2xl transition-all duration-300 h-full flex flex-col overflow-hidden hover:-translate-y-1 ${
+                  className={`group rounded-2xl bg-white border border-slate-200 hover:shadow-xl transition-all duration-300 h-full flex flex-col overflow-hidden hover:-translate-y-1 ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   {/* Service image */}
-                  <div className="relative h-40 overflow-hidden">
+                  <div className="relative h-80 overflow-hidden">
                     <Image
                       src={serviceImages[index]}
                       alt={service.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 via-slate-900/5 to-transparent" />
                     <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between">
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-sm ${
                         isBlue ? "bg-blue-600/90" : "bg-teal-600/90"
                       }`}>
                         <IconComponent className="w-6 h-6 text-white" />
                       </div>
-                      <span className="text-white/90 text-sm font-medium">{service.timeline}</span>
+                      {/* <span className="text-white/90 text-sm font-medium">{service.timeline}</span> */}
                     </div>
                   </div>
                   
                   <div className="p-6 lg:p-8 flex flex-col flex-grow">
                   {/* Title & Price */}
-                  <div className="mb-4">
+                  <div className="mb-0">
                     <h3 className="text-xl lg:text-2xl font-bold text-slate-900 mb-2">
                       {service.title}
                     </h3>
-                    <span className={`text-lg font-bold ${isBlue ? "text-blue-600" : "text-teal-600"}`}>
-                      {service.price}
-                    </span>
                   </div>
 
                   {/* Description */}
@@ -407,17 +434,7 @@ export default function ServicesComponent() {
                     {service.shortDesc}
                   </p>
 
-                  {/* Who is for */}
-                  <div className="mb-5">
-                    <h4 className="text-sm font-medium text-slate-900 mb-2">Кому подходит:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {service.whoIsFor.map((item, i) => (
-                        <span key={i} className="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-600 font-medium">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+
 
                   {/* Tasks */}
                   <div className="mb-5 flex-grow">
@@ -433,7 +450,7 @@ export default function ServicesComponent() {
                   </div>
 
                   {/* Includes preview */}
-                  <div className="flex flex-wrap gap-1.5 mb-5">
+                  {/* <div className="flex flex-wrap gap-1.5 mb-5">
                     {service.includes.slice(0, 4).map((item, i) => (
                       <span key={i} className={`px-2 py-1 text-xs rounded-md font-medium ${
                         isBlue ? "bg-blue-50 text-blue-600" : "bg-teal-50 text-teal-600"
@@ -446,7 +463,7 @@ export default function ServicesComponent() {
                         +{service.includes.length - 4}
                       </span>
                     )}
-                  </div>
+                  </div> */}
 
                   {/* CTA */}
                   <Link

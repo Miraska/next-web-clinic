@@ -9,6 +9,9 @@ import {
   Database,
   MessageSquare,
   Settings,
+  Search,
+  Wrench,
+  Zap,
   Check,
   ArrowRight,
 } from "lucide-react";
@@ -123,7 +126,7 @@ export default function HomeWhatWeDoSection() {
     },
     {
       icon: Settings,
-      problem: "Системы не связаны между собой",
+      problem: "Цифровая экосистема бизнеса - это набор изолированных островов. Данные не синхронизуруются, процессы работают со сбоями.",
       solution: "API и интеграции",
       description: "Объединяем системы в единую экосистему: 1С, CRM, сайт, маркетплейсы, платёжные системы. Автоматизируем обмен данными.",
       tasks: [
@@ -138,6 +141,57 @@ export default function HomeWhatWeDoSection() {
       slug: "api-integrations",
       accent: "teal",
     },
+    {
+      icon: Search,
+      problem: "Сайт не попадает в топ поиска, трафик из поисковых систем низкий",
+      solution: "SEO-оптимизация",
+      description: "Техническая SEO-оптимизация: скорость загрузки, структура, мета-теги, schema.org, Core Web Vitals. Аудит и внедрение рекомендаций.",
+      tasks: [
+        "Улучшение позиций в поиске",
+        "Оптимизация скорости загрузки",
+        "Исправление технических ошибок",
+        "Разметка Schema.org",
+      ],
+      includes: ["Технический аудит", "Оптимизация скорости", "Мета-теги", "Schema.org", "Отчёт и рекомендации"],
+      price: "По запросу",
+      duration: "2-4 недели",
+      slug: "seo",
+      accent: "blue",
+    },
+    {
+      icon: Wrench,
+      problem: "Нужна стабильная работа сайта, быстрые правки и развитие без содержания своего IT-отдела",
+      solution: "Поддержка и развитие",
+      description: "Техническая поддержка: мониторинг, обновления, исправление ошибок, развитие функционала. Обеспечение стабильной работы продукта.",
+      tasks: [
+        "Мониторинг и стабильность",
+        "Исправление ошибок",
+        "Добавление функционала",
+        "Обновления безопасности",
+      ],
+      includes: ["Мониторинг 24/7", "Резервные копии", "Обновления", "Консультации", "Отчётность"],
+      price: "По запросу",
+      duration: "По договору",
+      slug: "support",
+      accent: "teal",
+    },
+    {
+      icon: Zap,
+      problem: "Много ручной работы и дублирования данных между системами, нужны автоматические отчёты и сценарии",
+      solution: "Автоматизация бизнеса",
+      description: "Автоматизация повторяющихся процессов: интеграции между системами, отчёты, уведомления, сценарии. Сокращение ручной работы.",
+      tasks: [
+        "Снижение рутины",
+        "Интеграции между системами",
+        "Автоотчёты и дашборды",
+        "Уведомления и алерты",
+      ],
+      includes: ["Анализ процессов", "Интеграции", "Триггерные сценарии", "Документация", "Поддержка"],
+      price: "По запросу",
+      duration: "2-8 недель",
+      slug: "automation",
+      accent: "blue",
+    },
   ];
 
   // Service images for visual enhancement
@@ -148,6 +202,9 @@ export default function HomeWhatWeDoSection() {
     "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
     "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=800&q=80",
     "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+    "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
+    "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&q=80",
+    "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80",
   ];
 
   return (
@@ -188,7 +245,7 @@ export default function HomeWhatWeDoSection() {
                         <Globe className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <div className="text-white font-medium">6 направлений</div>
+                        <div className="text-white font-medium">9 направлений</div>
                         <div className="text-white/70 text-sm">Веб-разработка</div>
                       </div>
                     </div>

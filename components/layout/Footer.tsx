@@ -18,11 +18,15 @@ export default function Footer() {
   ];
 
   const services = [
-    { href: "/services/web-development", label: "Веб-разработка" },
+    { href: "/services/web-development", label: "Сайты и лендинги" },
+    { href: "/services/ecommerce", label: "Интернет-магазины" },
+    { href: "/services/web-apps", label: "Веб-приложения" },
     { href: "/services/crm-erp", label: "CRM/ERP системы" },
-    { href: "/services/automation", label: "Автоматизация бизнеса" },
+    { href: "/services/chatbots", label: "Чат-боты" },
     { href: "/services/api-integrations", label: "API и интеграции" },
+    { href: "/services/seo", label: "SEO-оптимизация" },
     { href: "/services/support", label: "Поддержка и развитие" },
+    { href: "/services/automation", label: "Автоматизация бизнеса" },
   ];
 
   const helpfulLinks = [
